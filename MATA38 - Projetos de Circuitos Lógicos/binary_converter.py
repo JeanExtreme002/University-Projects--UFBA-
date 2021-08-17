@@ -50,8 +50,8 @@ if __name__ == "__main__":
     value = input("Digite o valor (não pode ser negativo): ").replace(",", ".")
 
     if option == "1":
-        input(f"\nO valor binário de {value} é:", convert_decimal_to_binary(float(value)))
+        input(f"\nO valor binário de {value} é: {convert_decimal_to_binary(float(value))}")
     elif option == "2":
-        input(f"\nO valor decimal de {value} é:", convert_binary_to_decimal(value))
+        input(f"\nO valor decimal de {value} é: {convert_binary_to_decimal(value)}")
     else:
         input("\nA opção selecionada é inválida. Por favor, tente novamente.")
