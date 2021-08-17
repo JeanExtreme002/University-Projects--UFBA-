@@ -19,10 +19,10 @@ def add_binary(binary1: str, binary2: str) -> str:
         carry = 0
 
         # O decimal 2 é igual ao binário "10" (carry = 1, bit = 0)
-        if result == 2: carry = 1, result = 0
+        if result == 2: carry, result = 1, 0
 
         # O decimal 3 é igual ao binário "11" (carry = 1, bit = 1)
-        if result == 3: carry = 1, result = 1
+        if result == 3: carry, result = 1, 1
 
         # Adiciona o bit do resultado ao valor final.
         final_result += str(result)
