@@ -34,7 +34,7 @@ def convert_decimal_to_binary(value: float) -> str:
 
     binary = str(integer) + binary[::-1]
 
-    # Converte a parte fracinária para binário, caso haja.
+    # Converte a parte fracionária para binário, caso haja.
     if decimal != 0: binary += ","
 
     while decimal != 0:
@@ -50,9 +50,8 @@ if __name__ == "__main__":
     value = input("Digite o valor (não pode ser negativo): ").replace(",", ".")
 
     if option == "1":
-        print(f"\nO valor binário de {value} é:", convert_decimal_to_binary(float(value)))
+        input(f"\nO valor binário de {value} é:", convert_decimal_to_binary(float(value)))
     elif option == "2":
-        print(f"\nO valor decimal de {value} é:", convert_binary_to_decimal(value))
+        input(f"\nO valor decimal de {value} é:", convert_binary_to_decimal(value))
     else:
-        print("\nA opção selecionada é inválida. Por favor, tente novamente.")
-    input()
+        input("\nA opção selecionada é inválida. Por favor, tente novamente.")
