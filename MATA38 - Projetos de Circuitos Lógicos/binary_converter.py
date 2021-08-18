@@ -1,12 +1,16 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
 def convert_binary_to_decimal(binary: str) -> float:
-    binary = binary.replace(".", ",")
+    binary = binary.replace(",", ".")
     value = 0
 
+    # Guarda o sinal e transforma o valor em positivo.
+    sign = -1 if "-" == binary[0] else 1
+    binary = binary.replace("-", "")
+
     # Separa a parte inteira e a parte fracionária do valor binário.
-    if not "," in binary: binary += ",0"
-    integer, decimal = str(binary).split(",")
+    if not "." in binary: binary += ".0"
+    integer, decimal = binary.split(".")
 
     # Inverte a string para realizar a conversão utilizando o índice do bit como expoente.
     integer = integer[::-1]
@@ -18,10 +22,14 @@ def convert_binary_to_decimal(binary: str) -> float:
     # Converte a parte fracionária do valor binário para decimal.
     for exp in range(1, len(decimal) + 1):
         value += int(decimal[exp - 1]) * 2 ** -exp
-    return value
+    return value * sign
 
 def convert_decimal_to_binary(value: float) -> str:
     binary = ""
+
+    # Guarda o sinal e transforma o valor em positivo.
+    sign = "-" if value < 0 else ""
+    value = abs(value)
 
     # Separa a parte inteira e a parte fracionária do valor.
     integer, decimal = str(float(value)).split(".")
@@ -35,19 +43,20 @@ def convert_decimal_to_binary(value: float) -> str:
     binary = str(integer) + binary[::-1]
 
     # Converte a parte fracionária para binário, caso haja.
-    if decimal != 0: binary += ","
+    if decimal != 0: binary += "."
 
     while decimal != 0:
         decimal *= 2
         binary += str(int(decimal))
         if decimal >= 1: decimal -= 1
 
-    return binary
+    # Retorna o binário com o seu sinal, se houver.
+    return sign + binary
 
 
 if __name__ == "__main__":
     option = input("Selecione uma das seguintes opções:\n1 - Decimal para Binário\n2 - Binário para Decimal\nEscolha: ")
-    value = input("Digite o valor (não pode ser negativo): ").replace(",", ".")
+    value = input("Digite o valor: ").replace(",", ".")
 
     if option == "1":
         input(f"\nO valor binário de {value} é: {convert_decimal_to_binary(float(value))}")
