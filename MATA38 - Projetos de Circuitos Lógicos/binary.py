@@ -25,11 +25,17 @@ class BinaryValue(object):
         self.__binary_value = self.__to_binary(self.__decimal_value)
         return self
 
+    def __eq__(self, value):
+        return self.__decimal_value == float(value)
+
     def __float__(self):
         # A classe BinaryValue possui esse método para possibilitar operações
         # aritméticas entre dois objetos de BinaryValue ou entre um objeto de
         # BinaryValue e um valor float.
         return self.__decimal_value
+
+    def __int__(self):
+        return int(self.__decimal_value)
 
     def __repr__(self):
         return self.__binary_value + "(2)"
@@ -40,11 +46,11 @@ class BinaryValue(object):
     def __to_binary(self, value):
         return convert_decimal_to_binary(value)
 
-    def get_decimal(self):
-        return self.__decimal_value
-
     def get_binary(self):
         return self.__binary_value
+
+    def to_decimal(self):
+        return self.__decimal_value
 
     def to_one_s_complement(self):
         # Se o valor for positivo, não é necessário a conversão.
