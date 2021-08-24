@@ -56,3 +56,19 @@ assert value.to_two_s_complement() == "101"
 value = BinaryValue(-5.625) # Binário original: "-101.101"
 assert value.to_one_s_complement() == "1010.010"
 assert value.to_two_s_complement() == "1010.011"
+
+# Converte número real positivo para IEEE-754 com precisão de 32 bits.
+value = BinaryValue(0.375) # Binário original: "0.011"
+assert value.to_ieee_754() == "0" + "01111101" + "10000000000000000000000"
+
+# Converte número real negativo para IEEE-754 com precisão de 32 bits.
+value = BinaryValue(-0.241455078125) # Binário original: "-0.001111011101"
+assert value.to_ieee_754() == "1" + "01111100" + "11101110100000000000000"
+
+# Converte número real positivo para IEEE-754 com precisão de 64 bits.
+value = BinaryValue(0.625) # Binário original: "0.101"
+assert value.to_ieee_754_x64() == "0" + "01111111110" + "0100000000000000000000000000000000000000000000000000"
+
+# Converte número real negativo para IEEE-754 com precisão de 64 bits.
+value = BinaryValue(-731.5) # Binário original: "-1011011011.1"
+assert value.to_ieee_754_x64() == "1" + "10000001000" + "0110110111000000000000000000000000000000000000000000"
