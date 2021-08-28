@@ -1,6 +1,5 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
-from binary_calculator import add_binary
 from binary_converter import convert_binary_to_decimal, convert_decimal_to_binary
 
 class BinaryValue(object):
@@ -150,8 +149,10 @@ class BinaryValue(object):
         # a posição do último bit da parte fracionária.
         point_position = (len(binary) - (binary.find(".") + 1)) if binary.find(".") != -1 else -1
 
-        # Converte para complemento de 1, remove o seu ponto flutuante e depois soma 1.
-        binary = add_binary(self.to_one_s_complement().replace(".", ""), "1")
+        # Converte para complemento de 1, removendo o seu ponto flutuante, depois converte para decimal,
+        # soma 1 ao valor e converte novamente para binário, obtendo assim o complemento de 2.
+        binary = self.to_one_s_complement().replace(".", "")
+        binary = self.__to_binary(self.__to_decimal(binary) + 1)
 
         # Retorna o valor convertido com o seu ponto flutuante, caso haja.
         return binary if point_position == -1 else (binary[:-point_position] + "." + binary[-point_position:])
