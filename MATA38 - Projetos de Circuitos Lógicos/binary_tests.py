@@ -2,7 +2,11 @@ __author__ = "Jean Loui Bernard Silva de Jesus"
 
 from binary import BinaryValue
 
-# Inicia com valor 10 (binário: 1010)
+# Cria o objeto passando o valor binário "-1010". O valor decimal deve ser -10.
+value = BinaryValue("-1010")
+assert value.to_decimal() == -10
+
+# Cria o objeto passando o valor float 10 (binário: 1010)
 value = BinaryValue(10)
 assert value.get_binary() == "1010"
 
@@ -40,6 +44,14 @@ assert value.get_binary() == "-111"
 value = value - 0.625
 assert value == -7.625
 assert value.get_binary() == "-111.101"
+
+# Converte o binário positivo para sinal-magnitude.
+value = BinaryValue(3) # Binário original: "11"
+assert value.to_sign_magnitude() == "011"
+
+# Converte o binário negativo para sinal-magnitude.
+value = BinaryValue(-3) # Binário original: "11"
+assert value.to_sign_magnitude() == "111"
 
 # Tenta converter o número natural em binário para complemento de 1 e 2.
 # Como o valor é positivo, o binário não deve ser convertido.

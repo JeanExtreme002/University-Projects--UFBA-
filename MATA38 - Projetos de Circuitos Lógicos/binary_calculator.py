@@ -11,7 +11,7 @@ def add_binary(binary1: str, binary2: str) -> str:
     # que se possa somar da direita para esquerda. Dessa forma, é possível adicionar
     # cada bit à string sem problemas.
     binary1, binary2 = binary1[::-1], binary2[::-1]
-    final_result, carry = "", 0
+    binary, carry = "", 0
 
     for index in range(size):
         # Soma os bits e o carry da última operação.
@@ -25,13 +25,7 @@ def add_binary(binary1: str, binary2: str) -> str:
         if result == 3: carry, result = 1, 1
 
         # Adiciona o bit do resultado ao valor final.
-        final_result += str(result)
+        binary += str(result)
 
     # Adiciona o último carry ao binário invertido.
-    return ("" if not carry else "1") + final_result[::-1]
-
-if __name__ == "__main__":
-    print("SOMA DE BINÁRIOS (INTEIROS):")
-    value1 = input("Primeiro valor: ")
-    value2 = input("Segundo valor: ")
-    input(f"O resultado de {value1} + {value2} é {add_binary(value1, value2)}.")
+    return ("" if not carry else "1") + binary[::-1]

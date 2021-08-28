@@ -1,17 +1,36 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
 from binary_calculator import add_binary
-from binary_converter import convert_decimal_to_binary
+from binary_converter import convert_binary_to_decimal, convert_decimal_to_binary
 
 class BinaryValue(object):
-
     def __init__(self, value):
-        # Impede que o valor seja infinito ou indefinido.
-        if abs(value) == float("inf"): raise OverflowError("cannot convert float infinity to binary")
-        if value == float("NaN"): raise ValueError("cannot convert float NaN to binary")
+        """
+        O parâmetro "value" deve ser um número, inteiro ou flutuante,
+        um binário em formato de string ou mesmo um objeto de BinaryValue.
 
-        # Obtém o valor em float e seu respectivo binário.
-        self.__decimal_value = float(value)
+        Veja alguns exemplos abaixo:
+        >>> b = BinaryValue(27.93)
+        >>> b = BinaryValue(27)
+        >>> b = BinaryValue("10011011")
+        >>> b = BinaryValue("-10011011.101001")
+        """
+        if isinstance(value, str):
+            if self.__is_binary(value): self.__init_from_binary(value)
+            else: raise ValueError("invalid literal for binary: '{}'".format(value))
+        else:
+            # Impede que o valor seja infinito ou indefinido.
+            if abs(value) == float("inf"): raise OverflowError("cannot convert float infinity to binary")
+            if value == float("NaN"): raise ValueError("cannot convert float NaN to binary")
+            self.__init_from_decimal(value)
+
+    def __init_from_binary(self, binary):
+        binary = self.__format_binary(binary)
+        self.__decimal_value = self.__to_decimal(binary)
+        self.__binary_value = binary
+
+    def __init_from_decimal(self, decimal):
+        self.__decimal_value = float(decimal)
         self.__binary_value = self.__to_binary(self.__decimal_value)
 
     def __abs__(self):
@@ -51,11 +70,24 @@ class BinaryValue(object):
     def __str__(self):
         return self.__binary_value
 
+    def __format_binary(self, binary):
+        # Formata o binário, removendo bits zeros à esquerda e ponto flutuante desnecessário.
+        return ("-" if binary[0] == "-" else "") + binary.replace("-", "").lstrip("0").rstrip(".")
+
+    def __is_binary(self, string):
+        try:
+            float(string) # Se conseguir converter para float, então o formato está correto.
+            return all([char in "01-." for char in string])
+        except ValueError: return False
+
     def __to_binary(self, value):
         return convert_decimal_to_binary(value)
 
+    def __to_decimal(self, value):
+        return convert_binary_to_decimal(value)
+
     def __to_ieee_754(self, precision = 32):
-        binary = self.__binary_value.replace("-", "") + (".0" if not "." in self.__binary_value else "")
+        binary = self.__binary_value.replace("-", "") + ("." if not "." in self.__binary_value else "")
         sign = str(int(self.__decimal_value < 0))
 
         # Obtém o tamanho do expoente e da mantissa com base na precisão definida para valor.
@@ -82,19 +114,22 @@ class BinaryValue(object):
         # Retorna o binário no padrão IEEE-754 (sinal | expoente | mantissa).
         return sign + exponent + mantissa
 
-    def get_binary(self):
+    def get_binary(self) -> str:
         return self.__binary_value
 
-    def to_decimal(self):
+    def to_decimal(self) -> float:
         return self.__decimal_value
 
-    def to_ieee_754(self):
+    def to_ieee_754(self) -> str:
         return self.__to_ieee_754(precision = 32)
 
-    def to_ieee_754_x64(self):
+    def to_ieee_754_x64(self) -> str:
         return self.__to_ieee_754(precision = 64)
 
-    def to_one_s_complement(self):
+    def to_sign_magnitude(self) -> str:
+        return ("1" if self.__decimal_value < 0 else "0") + self.__binary_value.replace("-", "")
+
+    def to_one_s_complement(self) -> str:
         # Se o valor for positivo, não é necessário a conversão.
         if self.__decimal_value >= 0: return "0" + self.__binary_value
 
@@ -102,7 +137,7 @@ class BinaryValue(object):
         binary = "0" + self.__binary_value.replace("-", "")
         return "".join([("0" if bit == "1" else "1") if bit in "01" else bit for bit in binary])
 
-    def to_two_s_complement(self):
+    def to_two_s_complement(self) -> str:
         # Se o valor for positivo, não é necessário a conversão.
         if self.__decimal_value >= 0: return "0" + self.__binary_value
 

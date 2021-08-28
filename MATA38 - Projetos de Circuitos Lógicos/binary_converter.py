@@ -1,66 +1,48 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
 def convert_binary_to_decimal(binary: str) -> float:
-    binary = binary.replace(",", ".")
-    value = 0
-
     # Guarda o sinal e transforma o valor em positivo.
     sign = -1 if "-" == binary[0] else 1
     binary = binary.replace("-", "")
 
     # Separa a parte inteira e a parte fracionária do valor binário.
-    if not "." in binary: binary += ".0"
-    integer, decimal = binary.split(".")
+    if not "." in binary: binary += "."
+    integer_part, fractional_part = binary.split(".")
+
+    decimal = 0
 
     # Inverte a string para realizar a conversão utilizando o índice do bit como expoente.
-    integer = integer[::-1]
+    integer_part = integer_part[::-1]
 
     # Converte a parte inteira do valor binário para decimal.
-    for exp in range(len(integer)):
-        value += int(integer[exp]) * 2 ** exp
+    for exponent in range(len(integer_part)):
+        if integer_part[exponent] == "1": decimal += 2 ** exponent
 
     # Converte a parte fracionária do valor binário para decimal.
-    for exp in range(1, len(decimal) + 1):
-        value += int(decimal[exp - 1]) * 2 ** -exp
-    return value * sign
+    for exponent in range(1, len(fractional_part) + 1):
+        if fractional_part[exponent - 1] == "1": decimal += 2 ** -exponent
+    return sign * decimal
 
-def convert_decimal_to_binary(value: float) -> str:
+def convert_decimal_to_binary(decimal: float) -> str:
+    # Separa o sinal, a parte inteira e a parte fracionária do valor.
+    sign, absolute_value = ("-" if decimal < 0 else ""), abs(decimal)
+    integer_part = int(absolute_value)
+    fractional_part = absolute_value - integer_part
+
     binary = ""
 
-    # Guarda o sinal e transforma o valor em positivo.
-    sign = "-" if value < 0 else ""
-    value = abs(value)
-
-    # Separa a parte inteira e a parte fracionária do valor.
-    integer, decimal = str(float(value)).split(".")
-    integer, decimal = int(integer), float("0." + decimal)
-
     # Converte a parte inteira para binário.
-    while not integer in [0, 1]:
-        integer, remainder = divmod(integer, 2)
-        binary += str(remainder)
-
-    binary = str(integer) + binary[::-1]
+    while integer_part >= 1 or not binary:
+        integer_part, remainder = divmod(integer_part, 2)
+        binary = str(remainder) + binary
 
     # Converte a parte fracionária para binário, caso haja.
-    if decimal != 0: binary += "."
+    if fractional_part != 0: binary += "."
 
-    while decimal != 0:
-        decimal *= 2
-        binary += str(int(decimal))
-        if decimal >= 1: decimal -= 1
+    while fractional_part != 0:
+        fractional_part *= 2
+        bit = int(fractional_part)
+        binary += str(bit)
+        if bit: fractional_part -= bit
 
-    # Retorna o binário com o seu sinal, se houver.
     return sign + binary
-
-
-if __name__ == "__main__":
-    option = input("Selecione uma das seguintes opções:\n1 - Decimal para Binário\n2 - Binário para Decimal\nEscolha: ")
-    value = input("Digite o valor: ").replace(",", ".")
-
-    if option == "1":
-        input(f"\nO valor binário de {value} é: {convert_decimal_to_binary(float(value))}")
-    elif option == "2":
-        input(f"\nO valor decimal de {value} é: {convert_binary_to_decimal(value)}")
-    else:
-        input("\nA opção selecionada é inválida. Por favor, tente novamente.")
