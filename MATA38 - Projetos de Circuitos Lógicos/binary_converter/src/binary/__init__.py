@@ -1,6 +1,6 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
-from binary_converter import convert_binary_to_decimal, convert_decimal_to_binary
+from .converter import convert_binary_to_decimal, convert_decimal_to_binary
 
 class BinaryValue(object):
     def __init__(self, value):
@@ -70,8 +70,9 @@ class BinaryValue(object):
         return self.__binary_value
 
     def __format_binary(self, binary):
-        # Formata o binário, removendo bits zeros à esquerda e ponto flutuante desnecessário.
-        return ("-" if binary[0] == "-" else "") + binary.replace("-", "").lstrip("0").rstrip(".")
+        # Formata o binário, removendo ponto flutuante e bits zeros à esquerda desnecessários.
+        if "1" in binary.split(".")[0]: binary = binary.lstrip("0")
+        return binary.rstrip(".")
 
     def __is_binary(self, string):
         try:
@@ -98,15 +99,14 @@ class BinaryValue(object):
         # Obtém o expoente, com base no número de casas entre o MSB e o ponto flutuante,
         # e a mantissa, a partir do valor após o MSB, removendo o ponto flutuante da string.
         elif int(binary.split(".")[0]) >= 1:
-            exponent = 2 ** (exponent_size - 1) - 1 + binary.index(".") - 1
+            exponent = self.__to_binary(2 ** (exponent_size - 1) - 1 + binary.index(".") - 1)
             mantissa = binary.replace(".", "")[1: mantissa_size]
         else:
             msb_index = binary.index("1")
-            exponent = 2 ** (exponent_size - 1) - 1 + (msb_index - binary.index(".")) * -1
+            exponent = self.__to_binary(2 ** (exponent_size - 1) - 1 + (msb_index - binary.index(".")) * -1)
             mantissa = binary[msb_index + 1: msb_index + 1 + mantissa_size]
 
-        # Obtém o binário do expoente e completa o expoente e a mantissa para ficarem dentro do padrão.
-        exponent = self.__to_binary(exponent)
+        # Completa o expoente e a mantissa para ficarem dentro do padrão.
         exponent = "0" * (exponent_size - len(exponent)) + exponent
         mantissa += "0" * (mantissa_size - len(mantissa))
 
