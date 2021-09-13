@@ -70,9 +70,18 @@ class BinaryValue(object):
         return self.__binary_value
 
     def __format_binary(self, binary):
-        # Formata o binário, removendo ponto flutuante e bits zeros à esquerda desnecessários.
-        if "1" in binary.split(".")[0]: binary = binary.lstrip("0")
-        return binary.rstrip(".")
+        # Separa o sinal do valor para tratar a string.
+        sign = "-" if binary[0] == "-" else ""
+        binary = binary.replace("-", "")
+
+        # Remove bits zeros à esquerda desnecessários.
+        binary = binary.lstrip("0")
+        if not binary.split(".")[0]: binary = "0" + binary
+
+        # Remove bits zeros à direita desnecessários.
+        if "." in binary: binary = binary.rstrip("0").rstrip(".")
+
+        return sign + binary
 
     def __is_binary(self, string):
         try:
@@ -88,7 +97,7 @@ class BinaryValue(object):
 
     def __to_ieee_754(self, precision = 32):
         binary = self.__binary_value.replace("-", "") + ("." if not "." in self.__binary_value else "")
-        sign = str(int(self.__decimal_value < 0))
+        sign = "1" if "-" in self.__binary_value else "0"
 
         # Obtém o tamanho do expoente e da mantissa com base na precisão definida para valor.
         exponent_size, mantissa_size = (11, 52) if precision == 64 else (8, 23)
@@ -126,11 +135,11 @@ class BinaryValue(object):
         return self.__to_ieee_754(precision = 64)
 
     def to_sign_magnitude(self) -> str:
-        return ("1" if self.__decimal_value < 0 else "0") + self.__binary_value.replace("-", "")
+        return ("1" if "-" in self.__binary_value else "0") + self.__binary_value.replace("-", "")
 
     def to_one_s_complement(self) -> str:
         # Se o valor for positivo, não é necessário a conversão.
-        if self.__decimal_value >= 0: return "0" + self.__binary_value
+        if not "-" in self.__binary_value: return "0" + self.__binary_value.replace("-", "")
 
         # Remove o sinal negativo do valor e realiza o flip (troca de bit).
         binary = "0" + self.__binary_value.replace("-", "")
@@ -138,7 +147,7 @@ class BinaryValue(object):
 
     def to_two_s_complement(self) -> str:
         # Se o valor for positivo, não é necessário a conversão.
-        if self.__decimal_value >= 0: return "0" + self.__binary_value
+        if self.__decimal_value >= 0: return "0" + self.__binary_value.replace("-", "")
 
         binary = self.__binary_value
 
