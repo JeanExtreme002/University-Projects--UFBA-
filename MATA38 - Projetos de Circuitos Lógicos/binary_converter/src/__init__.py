@@ -51,10 +51,10 @@ class Application(object):
         if self.__option == 0: input_variable.set("".join([char for char in string if char in "0123456789.-"]))
         else: input_variable.set("".join([char for char in string if char in "01.-"]))
 
-    def __on_key_release(self, input_var):
+    def __on_key_release(self, input_variable):
         # Faz o tratamento do input do usuário antes de usuá-lo na conversão, removendo caracteres inválidos.
-        self.__parse_input(input_var)
-        value = input_var.get()
+        self.__parse_input(input_variable)
+        value = input_variable.get()
 
         # Obtém o resultado da conversão e mostra na tela.
         output = self.__convert_value(value)

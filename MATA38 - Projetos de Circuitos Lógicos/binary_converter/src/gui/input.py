@@ -13,7 +13,7 @@ class InputFrame(Frame):
     __label_font = ("Helvetica", 12)
     __entry_font = ("Helvetica", 10)
 
-    def __init__(self, master = None, callback = lambda event: None):
+    def __init__(self, master = None, callback = lambda *args: None):
         super().__init__(master)
         self.__build(callback)
 
