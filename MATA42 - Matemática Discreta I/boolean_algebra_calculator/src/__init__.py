@@ -1,6 +1,6 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
-from .calculator import calculate_boolean_expression
+from .calculator import NotAWellFormedFormulaError, calculate_boolean_expression
 from .core import operator_buttons, paths, window_config
 from .gui import ApplicationWindow
 import itertools
@@ -18,18 +18,21 @@ class Application(object):
         # que será a tabela verdade, com seu cabeçalho.
         variables = self.__get_expression_variables(expression)
 
-        truth_table = [variables + [expression,]]
+        truth_table = []
 
         # Percorre todas as combinações de valores para as variáveis para criar a tabela verdade.
         for row in itertools.product((1, 0), repeat = len(variables)):
-            new_expression = self.__insert_bool_values(expression, variables, row)
-            result = calculate_boolean_expression(new_expression)
+            
+            # Calcula a expressão, obtendo o seu resultado e um dicionário com todas as etapas realizadas.
+            try: result, steps = calculate_boolean_expression(expression, variables, row)
+            except NotAWellFormedFormulaError as error: return list()
 
-            # Se o resultado da expressão não for 0 ou 1, significa que a
-            # expressão não está bem formada, e retorna uma lista vazia.
-            if not result in "01": return list()
+            # Cria um cabeçalho para a tabela, se ainda não existir, contendo as
+            # variáveis e expressões encontradas durante o cálculo.
+            if len(truth_table) == 0: truth_table.append(variables + steps["expressions"])
 
-            truth_table.append(list(row) + [result,])
+            # Adiciona uma linha à tabela, com os valores utilizados para as variáveis e o resultado da expressão.
+            truth_table.append(list(row) + steps["results"])
         return truth_table
 
     def __get_all_operators(self):
@@ -48,12 +51,6 @@ class Application(object):
         for var in expression.replace(" " * 2, " ").split():
             if not var in variables: variables.append(var)
         return variables
-
-    def __insert_bool_values(self, expression, variables, values):
-        # Substitui as variáveis da expressão pelos valores booleanos.
-        for index in range(len(values)):
-            expression = expression.replace(variables[index], str(values[index]))
-        return expression
 
     def __on_button_press(self, input_variable):
         # Calcula a expressão e mostra sua tabela verdade.

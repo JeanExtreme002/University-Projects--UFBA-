@@ -26,3 +26,11 @@ def find_encapsulated_expressions(expression):
             yield index, end + 1
             index = end
         index += 1
+
+def insert_bool_values(expression, variables, values):
+    """
+    Substitui as variáveis da expressão pelos valores booleanos.
+    """
+    for index in range(len(values)):
+        expression = expression.replace(variables[index], str(values[index]))
+    return expression
