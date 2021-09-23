@@ -8,7 +8,7 @@ class ApplicationWindow(Tk):
     """
     Classe para criar a janela da aplicação com os seus widgets.
     """
-    
+
     def __init__(self, title, icon = None):
         super().__init__()
         self.__set_window_config(title, icon)
@@ -27,6 +27,9 @@ class ApplicationWindow(Tk):
 
         self.__input_frame = InputFrame(self.__main_frame, operators, input_callback, on_button_press)
         self.__input_frame.pack()
+
+    def get_user_options(self):
+        return self.__input_frame.get_user_options()
 
     def set_output(self, output):
         self.__output_frame.set_output(output)

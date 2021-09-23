@@ -1,6 +1,6 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
-from tkinter import Frame, Label, StringVar
+from tkinter import BooleanVar, Checkbutton, Frame, Label, StringVar
 from tkinter.ttk import Button, Entry
 
 class InputFrame(Frame):
@@ -27,7 +27,10 @@ class InputFrame(Frame):
         # Cria a Entry, adicionando um evento para calcular a expressão ao apertar "Enter".
         self.__entry = Entry(frame, textvariable = self.__input)
         self.__entry.bind("<Return>", lambda event: on_button_press(self.__input))
-        self.__entry.pack(side = "left", padx = (0, 10), fill = "x", expand = True)
+        self.__entry.pack(side = "left", fill = "x", expand = True)
+
+        self.__sort_option = Checkbutton(frame, text = "Ordenar Variáveis", var = BooleanVar(name = "sort_option"))
+        self.__sort_option.pack(padx = 10, side = "left")
 
         # Cria um botão para calcular a expressão.
         Button(frame, text = "Calcular", command = lambda: on_button_press(self.__input)).pack(side = "left")
@@ -49,3 +52,6 @@ class InputFrame(Frame):
         # Insere o operador na posição do cursor na Entry.
         cursor_position = self.__entry.index("insert")
         self.__entry.insert(cursor_position, operator)
+
+    def get_user_options(self):
+        return {"sort_variables": int(self.__sort_option.getvar("sort_option"))}

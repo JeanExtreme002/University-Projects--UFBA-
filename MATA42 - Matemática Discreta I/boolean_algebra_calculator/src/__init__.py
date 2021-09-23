@@ -1,7 +1,7 @@
 __author__ = "Jean Loui Bernard Silva de Jesus"
 
 from .calculator import NotAWellFormedFormulaError, calculate_boolean_expression
-from .core import operator_buttons, paths, window_config
+from .core import operator_buttons, operators, paths, window_config
 from .gui import ApplicationWindow
 import itertools
 
@@ -17,12 +17,13 @@ class Application(object):
         # Obtém todas as variáveis da expressão e cria uma lista,
         # que será a tabela verdade, com seu cabeçalho.
         variables = self.__get_expression_variables(expression)
+        if self.__window.get_user_options()["sort_variables"]: variables.sort()
 
         truth_table = []
 
         # Percorre todas as combinações de valores para as variáveis para criar a tabela verdade.
         for row in itertools.product((1, 0), repeat = len(variables)):
-            
+
             # Calcula a expressão, obtendo o seu resultado e um dicionário com todas as etapas realizadas.
             try: result, steps = calculate_boolean_expression(expression, variables, row)
             except NotAWellFormedFormulaError as error: return list()
@@ -35,16 +36,11 @@ class Application(object):
             truth_table.append(list(row) + steps["results"])
         return truth_table
 
-    def __get_all_operators(self):
-        # Retorna uma lista contendo todos os operadores que uma expressão pode conter, além
-        # dos operadores lógicos, como os operadores de tautologia e contradição, por exemplo.
-        return list(operator_buttons.values()) + list("()10")
-
     def __get_expression_variables(self, expression):
         variables = []
 
         # Remove todos os operadores da expressão.
-        for operator in self.__get_all_operators():
+        for operator in self.__get_valid_operators():
             expression = expression.replace(operator, " ")
 
         # Separa a string pelos espaços vazios e retorna todas as variáveis da expressão.
@@ -52,9 +48,17 @@ class Application(object):
             if not var in variables: variables.append(var)
         return variables
 
+    def __get_valid_operators(self):
+        # Retorna uma lista contendo todos os operadores que uma expressão pode conter, além
+        # dos operadores lógicos, como os operadores de tautologia e contradição, por exemplo.
+        return list(operator_buttons.values()) + list("[]()10")
+
     def __on_button_press(self, input_variable):
+        # Remove espaços vazios nas laterais da expressão e substitui colchetes por aspas.
+        expression = input_variable.get().strip().replace("[", "(").replace("]", ")")
+
         # Calcula a expressão e mostra sua tabela verdade.
-        truth_table = self.__calculate_expression(input_variable.get().strip())
+        truth_table = self.__calculate_expression(expression)
         self.__window.set_output(truth_table)
 
     def __on_key_release(self, input_variable):
@@ -64,11 +68,11 @@ class Application(object):
 
     def __parse_input(self, input_variable):
         # Obtém uma lista com todos os caracteres que a expressão pode conter.
-        valid_chars = self.__get_all_operators() + [chr(char_id) for char_id in range(ord("a"), ord("z") + 1)]
+        valid_chars = self.__get_valid_operators() + [chr(char_id) for char_id in range(ord("a"), ord("z") + 1)]
         valid_chars.append(" ")
 
         # Faz o tratamento da string, permitindo que fique apenas os caracteres válidos.
-        expression = input_variable.get().lower().replace("[", "(").replace("]", ")").lstrip().replace(" " * 2, " ")
+        expression = input_variable.get().lower().lstrip().replace(" " * 2, " ").replace("~", operators.NEGATION)
         input_variable.set("".join([char for char in expression if char in valid_chars]))
 
     def run(self):
