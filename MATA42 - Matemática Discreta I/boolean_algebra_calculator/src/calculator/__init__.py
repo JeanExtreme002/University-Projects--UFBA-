@@ -21,11 +21,15 @@ def calculate_boolean_expression(expression, variables, values):
 
     # Caso haja uma expressão dentro de parênteses, ela será calculada primeiro, através da recursividade,
     # e terá o seu resultado inserido na expressão externa. Exemplo: sendo a=1 e b=0, "~(a ^ b)" se torna "~0".
-    if "(" in expression:
-        for start, end in find_encapsulated_expressions(expression):
+    if "(" in original_expression:
+        for start, end in find_encapsulated_expressions(original_expression):
+
+            # Se o índice do parêntese de fechamento for zero, significa que
+            # o mesmo não existe. Logo, a expressão não é bem formada.
+            if end == 0: raise NotAWellFormedFormulaError(original_expression)
 
             # Obtém a subexpressão, sem os parênteses, e a calcula.
-            sub_expression = expression[start: end]
+            sub_expression = original_expression[start: end]
             result, calc_steps = calculate_boolean_expression(sub_expression[1: -1], variables, values)
 
             # Adiciona as subexpressões encontradas e seus resultados à lista.
