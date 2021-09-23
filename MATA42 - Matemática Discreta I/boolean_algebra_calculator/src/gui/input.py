@@ -29,8 +29,9 @@ class InputFrame(Frame):
         self.__entry.bind("<Return>", lambda event: on_button_press(self.__input))
         self.__entry.pack(side = "left", fill = "x", expand = True)
 
-        self.__sort_option = Checkbutton(frame, text = "Ordenar Variáveis", var = BooleanVar(name = "sort_option"))
-        self.__sort_option.pack(padx = 10, side = "left")
+        # Cria um Checkbutton para habilitar a ordenação das variáveis.
+        self.__sort_option = BooleanVar()
+        Checkbutton(frame, text = "Ordenar Variáveis", var = self.__sort_option).pack(padx = 10, side = "left")
 
         # Cria um botão para calcular a expressão.
         Button(frame, text = "Calcular", command = lambda: on_button_press(self.__input)).pack(side = "left")
@@ -54,4 +55,4 @@ class InputFrame(Frame):
         self.__entry.insert(cursor_position, operator)
 
     def get_user_options(self):
-        return {"sort_variables": int(self.__sort_option.getvar("sort_option"))}
+        return {"sort_variables": self.__sort_option.get()}

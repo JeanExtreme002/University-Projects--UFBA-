@@ -22,7 +22,7 @@ def find_encapsulated_expressions(expression):
 
     while index < len(expression):
         if expression[index] == "(":
-            end = find_closing_parenthesis(index + 1, expression)
+            end = find_closing_parenthesis(index, expression)
             yield index, end + 1
             index = end
         index += 1
