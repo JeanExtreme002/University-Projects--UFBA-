@@ -38,12 +38,12 @@ class InputFrame(Frame):
 
     def __build_operator_buttons(self, operators):
         frame = Frame(self)
-        frame.pack(pady = 10)
+        frame.pack(pady = 10, fill = "x", expand = True)
 
         # Cria um botão para cada operador, para inserir o seu caractere na Entry.
         for label, operator in operators.items():
             command = lambda event = None, operator = operator: self.__insert_operator_to_input(operator)
-            Button(frame, text = label, width = 20, command = command, takefocus = 0).pack(side = "left")
+            Button(frame, text = label, width = 20, command = command, takefocus = 0).pack(side = "left", fill = "x", expand = True)
 
             # Adiciona um evento para a Entry, para inserir o operador através do teclado.
             event_key = label.split(":", maxsplit = 1)[0].strip()

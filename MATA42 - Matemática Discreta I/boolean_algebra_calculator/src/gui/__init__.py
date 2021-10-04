@@ -16,17 +16,16 @@ class ApplicationWindow(Tk):
     def __set_window_config(self, title, icon):
         self.title(title)
         self.iconbitmap(icon)
-        self.resizable(False, False)
 
     def build(self, operators, input_callback, on_button_press):
         self.__main_frame = Frame(self)
-        self.__main_frame.pack(padx = 10, pady = 10)
+        self.__main_frame.pack(padx = 10, pady = 10, fill = "both", expand = True)
 
         self.__output_frame = OutputFrame(self.__main_frame)
-        self.__output_frame.pack(pady = 10, fill = "x")
+        self.__output_frame.pack(pady = (0, 10), fill = "both", expand = True)
 
         self.__input_frame = InputFrame(self.__main_frame, operators, input_callback, on_button_press)
-        self.__input_frame.pack()
+        self.__input_frame.pack(side = "bottom", fill = "x")
 
     def get_user_options(self):
         return self.__input_frame.get_user_options()
