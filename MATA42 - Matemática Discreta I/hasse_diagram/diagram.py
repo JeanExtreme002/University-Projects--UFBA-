@@ -1,4 +1,3 @@
-from tkinter import Canvas, Tk
 from PIL import Image, ImageDraw
 import math
 
@@ -15,26 +14,31 @@ def criar_diagrama(relacao, comprimento_de_linha = 100):
     # Mantém na relação apenas os pares que não possuem conexão com outros pares.
     relacao = [(x, y) for x, y in relacao if not existe_conexao(relacao, x, y)]
 
-    menor_x, maior_x = 0, 0
-    menor_y, maior_y = 0, 0
-    
+    menor_pos_x, maior_pos_x = 0, 0
+    menor_pos_y, maior_pos_y = 0, 0
+
     posicoes = dict()
     linhas = []
     atual_x = None
-    
+    roots = 0
+
     # Percorre todos os pares (x, y) da relação para criar as linhas do diagrama.
     for x, y in relacao:
-
-        # Não é possível criar uma linha tendo X igual a Y.
-        if x == y: continue
 
         # Caso o laço de repetição esteja iterando pares com um X diferente, o ângulo
         # será resetado e uma nova razão para o ângulo será calculada.
         if atual_x != x:
 
-            # Se o novo X for o primeiro da relação, a sua posição no diagrama
-            # será a coordenada raíz.
-            if atual_x is None: posicoes[x] = [0, 0]
+            # Se o X não possuir uma raíz, a sua posição no diagrama
+            # será a coordenada raíz (0, 0) com a posição X somada à um comprimento N.
+            if not x in posicoes:
+                posicoes[x] = [0 + comprimento_de_linha * math.ceil(roots / 2) * ((-1) ** roots), 0]
+                roots += 1
+
+                menor_pos_x = min([posicoes[x][0], menor_pos_x])
+                maior_pos_x = max([posicoes[x][0], maior_pos_x])
+                menor_pos_y = min([posicoes[x][1], menor_pos_y])
+                maior_pos_y = max([posicoes[x][1], maior_pos_y])
 
             # Define o X e a posição atual no diagrama.
             atual_x, posicao_atual = x, posicoes[x]
@@ -46,34 +50,34 @@ def criar_diagrama(relacao, comprimento_de_linha = 100):
         # Se o Y não tiver uma posição registrada, sua posição será calculada.
         if not y in posicoes:
 
-            # Calcula um novo ângulo para a sua posição. 
+            # Calcula um novo ângulo para a sua posição.
             angulo += razao_do_angulo * contador * (1 if contador % 2 == 0 else -1)
             contador += 1
 
             # Calcula a coordenada do Y, com base na coordenada atual.
             posicoes[y] = obter_coordenada(*posicao_atual, angulo, comprimento_de_linha)
 
-            menor_x = min([posicoes[y][0], menor_x])
-            maior_x = max([posicoes[y][0], maior_x])
-            menor_y = min([posicoes[y][1], menor_y])
-            maior_y = max([posicoes[y][1], maior_y])
+            menor_pos_x = min([posicoes[y][0], menor_pos_x])
+            maior_pos_x = max([posicoes[y][0], maior_pos_x])
+            menor_pos_y = min([posicoes[y][1], menor_pos_y])
+            maior_pos_y = max([posicoes[y][1], maior_pos_y])
 
         # Adiciona à lista a linha, no formato [x1, y1, x2, y2].
         linhas.append([*posicao_atual, *posicoes[y]])
 
     # Move o diagrama para que o menor XY seja zero.
     for linha in linhas:
-        linha[0] += abs(menor_x)
-        linha[2] += abs(menor_x)
-        linha[1] += abs(menor_y)
-        linha[3] += abs(menor_y)
+        linha[0] += abs(menor_pos_x)
+        linha[2] += abs(menor_pos_x)
+        linha[1] += abs(menor_pos_y)
+        linha[3] += abs(menor_pos_y)
 
     for value in posicoes:
-        posicoes[value][0] += abs(menor_x)
-        posicoes[value][1] += abs(menor_y)
+        posicoes[value][0] += abs(menor_pos_x)
+        posicoes[value][1] += abs(menor_pos_y)
 
     # Retorna os pontos e linhas do diagrama, e seu tamanho.
-    return posicoes, linhas, [math.ceil(maior_x - menor_x), math.ceil(maior_y - menor_y)]
+    return posicoes, linhas, [math.ceil(maior_pos_x - menor_pos_x), math.ceil(maior_pos_y - menor_pos_y)]
 
 def existe_conexao(relacao, x, y, atual_x = None):
     """
@@ -87,7 +91,7 @@ def existe_conexao(relacao, x, y, atual_x = None):
     """
     if atual_x is None: atual_x = x
     if atual_x == y: return False
-    
+
     for par in relacao:
         if par[0] != atual_x or par[0] == par[1]: continue
         if atual_x != x and par[1] == y: return True
@@ -101,7 +105,7 @@ def gerar_diagrama(nome_do_arquivo, relacao, comprimento_de_linha = 100, raio_do
 
     # Espaçamento da borda imagem e distância entre um ponto e seu texto.
     espaco, distancia_de_texto = 10, 10
-    
+
     # Obtém todos os pontos e linhas do diagrama.
     pontos, linhas, tamanho = criar_diagrama(relacao, comprimento_de_linha = comprimento_de_linha)
 
@@ -157,7 +161,7 @@ def gerar_diagrama(nome_do_arquivo, relacao, comprimento_de_linha = 100, raio_do
 
     # Salva a imagem.
     imagem.save(nome_do_arquivo)
-    
+
 def obter_coordenada(x1, y1, angulo, distancia):
     """
     Obtém um coordenada inicial (x, y) e retorna uma
@@ -173,7 +177,7 @@ def obter_total_de_pares(relacao, x):
     com um determinado X.
     """
     contador = 0
-    
+
     for par in relacao:
         if par[0] == x: contador += 1
     return contador
@@ -185,13 +189,13 @@ def ordenar_relacao(relacao):
     """
     relacao_original = relacao.copy()
     relacao = relacao.copy()
-    
+
     relacao_ordenada = []
     total_de_pares = {}
-    
+
     for i in range(len(relacao)):
         maior, par_maior = 0, (0, 0)
-        
+
         for par in relacao:
             # Se o total de pares para um determinado X não tiver sido obtido,
             # ele será calculado e registrado no dicionário.
