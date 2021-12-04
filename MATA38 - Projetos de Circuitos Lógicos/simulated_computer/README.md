@@ -70,7 +70,7 @@ acumulador, **RA**, como pode ser observado na **Tabela 1**.
 Note que a palavra da MATA38-2021 possui 8 bits (1 byte de palavra). As instruções podem ser de dois tipos, com os
 seguintes formatos:
 
-- **Tipo I:** Estas são instruções que possuem dois operandos de dois bits, cada um dos quais endereça um registrador e tem
+- **Tipo I:** Estas são instruções que possuem dois operandos de 2 bits, cada um dos quais endereça um registrador e tem
 formato INST Rx, Ry.
 - **Tipo II:** A única instrução do tipo dois é a **HLT**, que não possui parâmetros e, portanto, tem seus quatro bits menos significativos ignorados pelo processador. Sua função é encerrar o fluxo de controle. Todo programa contém esta instrução como a última instrução a ser executada.
 
