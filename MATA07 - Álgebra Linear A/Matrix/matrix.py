@@ -256,6 +256,17 @@ class Matrix(object):
         """
         return self.__non_zero_values == 0
 
+    def is_scalar(self):
+        """
+        Verifica se a matriz é uma matriz escalar.
+        """
+        first_element = self[0] # Obtém o primeiro elemento da matriz para servir de referência.
+        
+        for row, column, element in self:
+            if (row == column and element != first_element) or (row != column and element != 0):
+                return False
+        return True
+
     def is_skew_hermitian(self):
         """
         Verifica se a matriz é uma matriz anti-hermitiana.
@@ -312,46 +323,3 @@ class Matrix(object):
         """
         return self.__conjugate_transpose(conjugate = False)
 
-m1 = Matrix(3, 3)
-m2 = Matrix(3, 4)
-m3 = Matrix(4, 4)
-
-m1[0:0] = 2
-m1[0:1] = 3
-m1[0:2] = complex(4, -7)
-m1[1:0] = 1
-m1[1:1] = 7
-m1[1:2] = complex(9, 10)
-m1[2:0] = 7
-m1[2:1] = 0
-m1[2:2] = 46
-
-m2[0:0] = 8
-m2[0:1] = 2
-m2[0:2] = 45
-m2[0:3] = 5
-m2[1:0] = 1
-m2[1:1] = 4
-m2[1:2] = 7
-m2[1:3] = 3
-m2[2:0] = 5
-m2[2:1] = 3
-m2[2:2] = 2
-m2[2:3] = 11
-
-m3[0:0] = 0
-m3[0:1] = 0
-m3[0:2] = 0
-m3[0:3] = 0
-m3[1:0] = 0
-m3[1:1] = 0
-m3[1:2] = 0
-m3[1:3] = 0
-m3[2:0] = 0
-m3[2:1] = 0
-m3[2:2] = 0
-m3[2:3] = complex(9, 10)
-m3[3:0] = 0
-m3[3:1] = 0
-m3[3:2] = -complex(9, -10)
-m3[3:3] = 0
