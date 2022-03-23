@@ -11,15 +11,26 @@ class Matrix(object):
         str_matrix = [[str(v) for v in self.__matrix[row]] for row in range(self.__rows)]
         return "\n".join(["|" + ",".join(str_matrix[row]) + "|" for row in range(self.__rows)])
 
-    def __getitem__(self, position: slice):
-        # Caso seja obtido um índice (valor inteiro), a linha e coluna do elemento será calculada.
-        if isinstance(position, int):
-            position = slice(*divmod(position, self.__columns))
+    def __get_position_slice(self, position):
+        # Caso seja obtido um índice (valor inteiro), a linha e coluna do elemento serão calculados.
+        return slice(*divmod(position, self.__columns)) if isinstance(position, int) else position
+
+    def __getitem__(self, position):
+        """
+        Param position: Pode ser um índice (inteiro) ou um slice [row: column].
+        """
+        position = self.__get_position_slice(position)
 
         # Retorna o valor na posição (linha, coluna).
         return self.__matrix[position.start][position.stop]
 
-    def __setitem__(self, position: slice, value):
+    def __setitem__(self, position, value):
+        """
+        Param position: Deve ser um índice (inteiro) ou um slice [row: column].
+        Param value: Deve ser um número (int, float, complex).
+        """
+        position = self.__get_position_slice(position)
+        
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex)")
         self.__matrix[position.start][position.stop] = value
@@ -103,6 +114,21 @@ class Matrix(object):
                     new_matrix[row: column] += self.__matrix[row][index] * matrix[index: column]
         return new_matrix
 
+    def __check_symmetry(self, skew = False, conjugate = False):
+        # Caso a matriz não seja quadrada, o resultado será falso para qualquer verificação.
+        if not self.is_square(): return False
+
+        # Percorre a parte triangular superior da matriz.
+        for row in range(self.__rows):
+            for column in range(row, self.__columns):
+                # Obtém o valor da matriz. Caso pedido, o valor será conjugado.
+                value = self[column: row].conjugate() if conjugate else self[column: row]
+
+                # Verifica se o valor na posição (linha, coluna), positivo ou negativo, dependendo
+                # do que for pedido, está presente na posição (coluna, linha).
+                if self[row: column] != self[column: row] * (-1 if skew else 1): return False
+        return True     
+
     def __conjugate_transpose(self, conjugate = True, transpose = True):
         new_matrix = Matrix(*self.get_order()[::-1])
 
@@ -115,19 +141,19 @@ class Matrix(object):
             new_matrix[row: column] = element.conjugate() if conjugate else element
         return new_matrix
 
-    def __get_position(self, position, row = True):
+    def __is_matrix(self, value):
+        return isinstance(value, Matrix)
+
+    def __is_number(self, value):
+        return type(value) in [int, float, complex]
+
+    def __verify_position(self, position, row = True):
         # Verifica se a posição (linha ou coluna) é um inteiro maior que zero e retorna (posição - 1).
         if not isinstance(position, int):
             raise TypeError("{} must be an integer".format("Row" if row else "Column"))
         if position <= 0:
             raise ValueError("{} must be > 0".format("Row" if row else "Column"))
         return position - 1
-
-    def __is_matrix(self, value):
-        return isinstance(value, Matrix)
-
-    def __is_number(self, value):
-        return type(value) in [int, float, complex]
 
     def add(self, matrix):
         """
@@ -151,14 +177,14 @@ class Matrix(object):
         """
         Obtém um elemento na posição (linha >= 1, coluna >= 1).
         """
-        row, column = self.__get_position(row), self.__get_position(column, row = False)
+        row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         return self[row: column]
 
     def get_column(self, column):
         """
         Obtém toda a coluna da matriz em uma determinada posição.
         """
-        column = self.__get_position(column, row = False)
+        column = self.__verify_position(column, row = False)
         return [self[row: column] for row in range(self.__rows)]
 
     def get_order(self):
@@ -171,8 +197,14 @@ class Matrix(object):
         """
         Obtém toda a linha da matriz em uma determinada posição.
         """
-        row = self.__get_position(row)
+        row = self.__verify_position(row)
         return self.__matrix[row].copy()
+
+    def is_hermitian(self):
+        """
+        Verifica se a matriz é uma matriz hermitiana.
+        """
+        return self.__check_symmetry(conjugate = True)
 
     def is_identity(self):
         """
@@ -182,6 +214,18 @@ class Matrix(object):
             if (row == column and element != 1) or (row != column and element != 0):
                 return False
         return True
+
+    def is_skew_hermitian(self):
+        """
+        Verifica se a matriz é uma matriz anti-hermitiana.
+        """
+        return self.__check_symmetry(skew = True, conjugate = True)
+
+    def is_skew_symmetric(self):
+        """
+        Verifica se a matriz é uma matriz anti-simétrica.
+        """
+        return self.__check_symmetry(skew = True)
 
     def is_square(self):
         """
@@ -193,7 +237,7 @@ class Matrix(object):
         """
         Verifica se a matriz é uma matriz simétrica.
         """
-        pass
+        return self.__check_symmetry()
 
     def multiply(self, value):
         """
@@ -205,17 +249,20 @@ class Matrix(object):
         """
         Insere um elemento na posição (linha >= 1, coluna >= 1).
         """
-        row, column = self.__get_position(row), self.__get_position(column, row = False)
+        row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         self[row: column] = value
 
     def trace(self):
         """
         Retorna o traço da matriz.
         """
+        if not self.is_square():
+            raise MatrixOrderError("Must be a square matrix")
+        
         value = 0
         
-        for row in range(self.__rows):
-            value += self[row: row]
+        for index in range(self.__rows):
+            value += self[index: index]
         return value
 
     def transpose(self):
@@ -223,7 +270,6 @@ class Matrix(object):
         Retorna a matriz transposta.
         """
         return self.__conjugate_transpose(conjugate = False)
-
 
 
 
