@@ -6,6 +6,7 @@ class Matrix(object):
     def __init__(self, rows, columns):
         self.__matrix = [[0,] * columns for i in range(rows)]
         self.__rows, self.__columns = rows, columns
+        self.__complex_values = 0
 
     def __str__(self):
         str_matrix = [[str(v) for v in self.__matrix[row]] for row in range(self.__rows)]
@@ -30,6 +31,13 @@ class Matrix(object):
         Param value: Deve ser um número (int, float, complex).
         """
         position = self.__get_position_slice(position)
+
+        # Verifica se o tipo dos valores para determinar ao final
+        # se existem números complexos na matriz.
+        if isinstance(self[position.start: position.stop], complex):
+            if not isinstance(value, complex): self.__complex_values -= 1
+        else:
+            if isinstance(value, complex): self.__complex_values += 1
         
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex)")
@@ -205,6 +213,12 @@ class Matrix(object):
         Verifica se a matriz é uma matriz hermitiana.
         """
         return self.__check_symmetry(conjugate = True)
+
+    def is_complex(self):
+        """
+        Verifica se há números complexos na matriz.
+        """
+        return self.__complex_values > 0
 
     def is_identity(self):
         """
