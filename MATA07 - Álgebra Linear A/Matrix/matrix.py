@@ -134,7 +134,7 @@ class Matrix(object):
 
                 # Verifica se o valor na posição (linha, coluna), positivo ou negativo, dependendo
                 # do que for pedido, está presente na posição (coluna, linha).
-                if self[row: column] != self[column: row] * (-1 if skew else 1): return False
+                if self[row: column] != value * (-1 if skew else 1): return False
         return True     
 
     def __conjugate_transpose(self, conjugate = True, transpose = True):
@@ -284,6 +284,5 @@ class Matrix(object):
         Retorna a matriz transposta.
         """
         return self.__conjugate_transpose(conjugate = False)
-
 
 
