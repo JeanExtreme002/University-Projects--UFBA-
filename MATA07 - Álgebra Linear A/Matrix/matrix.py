@@ -4,10 +4,12 @@ class MatrixOrderError(Exception):
 class Matrix(object):
     
     def __init__(self, rows, columns, iterable = []):
+        self.__complex_values = 0
+        self.__non_zero_values = 0
+        
         self.__matrix = [[0,] * columns for i in range(rows)]
         self.__rows, self.__columns = rows, columns
-        self.__complex_values = 0
-
+    
         # Adiciona os valores do iterável à matriz, se houverem.
         for index in range(min(rows * columns, len(iterable))):
             self[index] = iterable[index]
@@ -42,6 +44,12 @@ class Matrix(object):
             if not isinstance(value, complex): self.__complex_values -= 1
         else:
             if isinstance(value, complex): self.__complex_values += 1
+
+        # Verifica se o valor é zero para determinar ao final se a matriz é nula.
+        if self[position.start: position.stop] == 0:
+            if value != 0: self.__non_zero_values += 1
+        else:
+            if value == 0: self.__non_zero_values -= 1
         
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
@@ -233,6 +241,12 @@ class Matrix(object):
                 return False
         return True
 
+    def is_null(self):
+        """
+        Verifica se a matriz é nula.
+        """
+        return self.__non_zero_values == 0
+
     def is_skew_hermitian(self):
         """
         Verifica se a matriz é uma matriz anti-hermitiana.
@@ -288,48 +302,4 @@ class Matrix(object):
         Retorna a matriz transposta.
         """
         return self.__conjugate_transpose(conjugate = False)
-
-m1 = Matrix(3, 3)
-m2 = Matrix(3, 4)
-m3 = Matrix(4, 4)
-
-m1[0:0] = 2
-m1[0:1] = 3
-m1[0:2] = complex(4, -7)
-m1[1:0] = 1
-m1[1:1] = 7
-m1[1:2] = complex(9, 10)
-m1[2:0] = 7
-m1[2:1] = 0
-m1[2:2] = 46
-
-m2[0:0] = 8
-m2[0:1] = 2
-m2[0:2] = 45
-m2[0:3] = 5
-m2[1:0] = 1
-m2[1:1] = 4
-m2[1:2] = 7
-m2[1:3] = 3
-m2[2:0] = 5
-m2[2:1] = 3
-m2[2:2] = 2
-m2[2:3] = 11
-
-m3[0:0] = 0
-m3[0:1] = 0
-m3[0:2] = 0
-m3[0:3] = 0
-m3[1:0] = 0
-m3[1:1] = 0
-m3[1:2] = 0
-m3[1:3] = 0
-m3[2:0] = 0
-m3[2:1] = 0
-m3[2:2] = 0
-m3[2:3] = complex(9, 10)
-m3[3:0] = 0
-m3[3:1] = 0
-m3[3:2] = -complex(9, -10)
-m3[3:3] = 0
 
