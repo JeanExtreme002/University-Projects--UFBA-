@@ -3,10 +3,14 @@ class MatrixOrderError(Exception):
 
 class Matrix(object):
     
-    def __init__(self, rows, columns):
+    def __init__(self, rows, columns, iterable = []):
         self.__matrix = [[0,] * columns for i in range(rows)]
         self.__rows, self.__columns = rows, columns
         self.__complex_values = 0
+
+        # Adiciona os valores do iterável à matriz, se houverem.
+        for index in range(min(rows * columns, len(iterable))):
+            self[index] = iterable[index]
 
     def __str__(self):
         str_matrix = [[str(v) for v in self.__matrix[row]] for row in range(self.__rows)]
@@ -40,7 +44,7 @@ class Matrix(object):
             if isinstance(value, complex): self.__complex_values += 1
         
         # Verifica se o valor é um número e o insere na posição especificada.
-        if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex)")
+        if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
         self.__matrix[position.start][position.stop] = value
 
     def __iter__(self):
@@ -60,7 +64,7 @@ class Matrix(object):
     def __eq__(self, matrix):
         # Verifica se o argumento é uma matriz.
         if not self.__is_matrix(matrix):
-            raise TypeError("Expected a Matrix object")
+            raise TypeError("Expected a Matrix object, not '{}'".format(type(matrix).__name__))
 
         # Verifica se a ordem das matrizes é a mesma.
         if self.get_order() != matrix.get_order(): return False
@@ -73,11 +77,11 @@ class Matrix(object):
     def __add__(self, matrix):
         # Verifica se o argumento é uma matriz.
         if not self.__is_matrix(matrix):
-            raise TypeError("Expected a Matrix object")
+            raise TypeError("Expected a Matrix object, not '{}'".format(type(matrix).__name__))
 
         # Verifica se a ordem é a mesma.
         if not self.get_order() == matrix.get_order():
-            raise MatrixOrderError("Matrix must have the same order")
+            raise MatrixOrderError("Matrix must have the same order: {}x{}".format(*self.get_order()))
     
         new_matrix = Matrix(*self.get_order())
 
@@ -99,7 +103,7 @@ class Matrix(object):
         elif self.__is_number(value):
             return self.__mul_by_number(value)
             
-        else: raise TypeError("Value must be a number (int, float or complex) or a Matrix object")
+        else: raise TypeError("Value must be a number (int, float or complex) or a Matrix object, not '{}'".format(type(value).__name__))
     
     def __mul_by_number(self, value):
         new_matrix = Matrix(*self.get_order())
@@ -158,7 +162,7 @@ class Matrix(object):
     def __verify_position(self, position, row = True):
         # Verifica se a posição (linha ou coluna) é um inteiro maior que zero e retorna (posição - 1).
         if not isinstance(position, int):
-            raise TypeError("{} must be an integer".format("Row" if row else "Column"))
+            raise TypeError("{} must be an integer, not '{}'".format("Row" if row else "Column", type(position).__name__))
         if position <= 0:
             raise ValueError("{} must be > 0".format("Row" if row else "Column"))
         return position - 1
@@ -285,4 +289,47 @@ class Matrix(object):
         """
         return self.__conjugate_transpose(conjugate = False)
 
+m1 = Matrix(3, 3)
+m2 = Matrix(3, 4)
+m3 = Matrix(4, 4)
+
+m1[0:0] = 2
+m1[0:1] = 3
+m1[0:2] = complex(4, -7)
+m1[1:0] = 1
+m1[1:1] = 7
+m1[1:2] = complex(9, 10)
+m1[2:0] = 7
+m1[2:1] = 0
+m1[2:2] = 46
+
+m2[0:0] = 8
+m2[0:1] = 2
+m2[0:2] = 45
+m2[0:3] = 5
+m2[1:0] = 1
+m2[1:1] = 4
+m2[1:2] = 7
+m2[1:3] = 3
+m2[2:0] = 5
+m2[2:1] = 3
+m2[2:2] = 2
+m2[2:3] = 11
+
+m3[0:0] = 0
+m3[0:1] = 0
+m3[0:2] = 0
+m3[0:3] = 0
+m3[1:0] = 0
+m3[1:1] = 0
+m3[1:2] = 0
+m3[1:3] = 0
+m3[2:0] = 0
+m3[2:1] = 0
+m3[2:2] = 0
+m3[2:3] = complex(9, 10)
+m3[3:0] = 0
+m3[3:1] = 0
+m3[3:2] = -complex(9, -10)
+m3[3:3] = 0
 
