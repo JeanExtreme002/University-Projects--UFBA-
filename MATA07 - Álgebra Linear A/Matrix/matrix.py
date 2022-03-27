@@ -360,6 +360,20 @@ class Matrix(object):
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         self[row: column] = value
 
+    def set_column(self, column, iterable):
+        """
+        Define uma coluna em uma determinada posição da matriz.
+        """
+        column = self.__verify_position(column, row = False)
+
+        # Verifica se o objeto iterável é formado apenas por números.
+        number_array, value_index, value_type = self.__is_number_array(iterable)
+        if not number_array: raise TypeError("Iterable must contain only numbers. Got '{}' at index {}".format(value_type.__name__, value_index))
+
+        # Insere os valores do iterável em cada linha, na coluna especificada, da matriz.
+        for row in range(self.__rows):
+            self[row: column] = iterable[row]
+
     def set_row(self, row, iterable):
         """
         Define uma linha em uma determinada posição da matriz.
