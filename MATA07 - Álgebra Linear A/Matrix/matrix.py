@@ -4,6 +4,10 @@ class MatrixOrderError(Exception):
 class Matrix(object):
     
     def __init__(self, rows, columns, iterable = []):
+        # Verifica se o número de linhas ou colunas é menor que zero.
+        if rows < 0 or columns < 0:
+            raise MatrixOrderError("Matrix order must be at least '0x0'")
+        
         self.__complex_values = 0
         self.__non_zero_values = 0
         
@@ -185,12 +189,27 @@ class Matrix(object):
     def __is_number(self, value):
         return type(value) in [int, float, complex]
 
+    def __is_number_array(self, iterable):
+        # Percorre o iterável, verificando se ele possui apenas elementos numéricos.
+        for index in range(len(iterable)):
+            value = iterable[index]
+            if not self.__is_number(value): return False, index, type(value)
+        return True, None, None
+
     def __verify_position(self, position, row = True):
-        # Verifica se a posição (linha ou coluna) é um inteiro maior que zero e retorna (posição - 1).
+        # Verifica se a posição (linha ou coluna) é um inteiro maior que zero.
         if not isinstance(position, int):
             raise TypeError("{} must be an integer, not '{}'".format("Row" if row else "Column", type(position).__name__))
         if position <= 0:
-            raise ValueError("{} must be > 0".format("Row" if row else "Column"))
+            raise IndexError("{} must be > 0".format("Row" if row else "Column"))
+
+        # Verifica se a posição (linha ou coluna) é maior que o tamanho da matriz.
+        if row and position > self.__rows:
+            raise IndexError("Matrix has just {} rows".format(self.__rows))
+        elif not row and position > self.__columns:
+            raise IndexError("Matrix has just {} columns".format(self.__columns))
+
+        # Retorna a posição em forma de índice comum (indo de zero à N). 
         return position - 1
 
     def add(self, matrix):
@@ -237,6 +256,9 @@ class Matrix(object):
         """
         row = self.__verify_position(row)
         return self.__matrix[row].copy()
+
+    def interchange_rows(self, row1, row2):
+        pass
 
     def is_column(self):
         """
@@ -337,6 +359,20 @@ class Matrix(object):
         """
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         self[row: column] = value
+
+    def set_row(self, row, iterable):
+        """
+        Define uma linha em uma determinada posição da matriz.
+        """
+        row = self.__verify_position(row)
+
+        # Verifica se o objeto iterável é formado apenas por números.
+        number_array, value_index, value_type = self.__is_number_array(iterable)
+        if not number_array: raise TypeError("Iterable must contain only numbers. Got '{}' at index {}".format(value_type.__name__, value_index))
+
+        # Insere os valores do iterável em cada coluna, na linha especificada, da matriz.
+        for column in range(self.__columns):
+            self[row: column] = iterable[column]
 
     def trace(self):
         """
