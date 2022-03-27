@@ -134,8 +134,17 @@ class Matrix(object):
                     new_matrix[row: column] += self.__matrix[row][index] * matrix[index: column]
         return new_matrix
 
+    def __check_diagonal(self, value = 1):
+        # Um dos requisitos para a função retornar True é a matriz ser quadrada.
+        if not self.is_square(): return False
+        
+        for row, column, element in self:
+            if (row == column and element != value) or (row != column and element != 0):
+                return False
+        return True
+    
     def __check_symmetry(self, skew = False, conjugate = False):
-        # Caso a matriz não seja quadrada, o resultado será falso para qualquer verificação.
+        # Um dos requisitos para a função retornar True é a matriz ser quadrada.
         if not self.is_square(): return False
 
         # Percorre a parte triangular superior da matriz.
@@ -148,6 +157,15 @@ class Matrix(object):
                 # do que for pedido, está presente na posição (coluna, linha).
                 if self[row: column] != value * (-1 if skew else 1): return False
         return True     
+
+    def __check_triangular(self, lower = False):
+        # Um dos requisitos para a função retornar True é a matriz ser quadrada.
+        if not self.is_square(): return False
+        
+        for row, column, element in self:
+            if ((row < column) if lower else (row > column)) and element != 0:
+                return False
+        return True
 
     def __conjugate_transpose(self, conjugate = True, transpose = True):
         new_matrix = Matrix(*self.get_order()[::-1])
@@ -220,11 +238,11 @@ class Matrix(object):
         row = self.__verify_position(row)
         return self.__matrix[row].copy()
 
-    def is_hermitian(self):
+    def is_column(self):
         """
-        Verifica se a matriz é uma matriz hermitiana.
+        Verifica se a matriz é uma matriz coluna.
         """
-        return self.__check_symmetry(conjugate = True)
+        return self.__columns == 1
 
     def is_complex(self):
         """
@@ -241,14 +259,23 @@ class Matrix(object):
                 return False
         return True
 
+    def is_hermitian(self):
+        """
+        Verifica se a matriz é uma matriz hermitiana.
+        """
+        return self.__check_symmetry(conjugate = True)
+
     def is_identity(self):
         """
         Verifica se a matriz é uma matriz identidade.
         """
-        for row, column, element in self:
-            if (row == column and element != 1) or (row != column and element != 0):
-                return False
-        return True
+        return self.__check_diagonal(value = 1)
+
+    def is_lower_triangular(self):
+        """
+        Verifica se a matriz é uma matriz triangular inferior.
+        """
+        return self.__check_triangular(lower = True)
 
     def is_null(self):
         """
@@ -256,17 +283,18 @@ class Matrix(object):
         """
         return self.__non_zero_values == 0
 
+    def is_row(self):
+        """
+        Verifica se a matriz é uma matriz linha.
+        """
+        return self.__rows == 1
+
     def is_scalar(self):
         """
         Verifica se a matriz é uma matriz escalar.
         """
-        first_element = self[0] # Obtém o primeiro elemento da matriz para servir de referência.
+        return self.__check_diagonal(value = self[0])
         
-        for row, column, element in self:
-            if (row == column and element != first_element) or (row != column and element != 0):
-                return False
-        return True
-
     def is_skew_hermitian(self):
         """
         Verifica se a matriz é uma matriz anti-hermitiana.
@@ -290,6 +318,12 @@ class Matrix(object):
         Verifica se a matriz é uma matriz simétrica.
         """
         return self.__check_symmetry()
+
+    def is_upper_triangular(self):
+        """
+        Verifica se a matriz é uma matriz triangular superior.
+        """
+        return self.__check_triangular(lower = False)
 
     def multiply(self, value):
         """
@@ -322,4 +356,3 @@ class Matrix(object):
         Retorna a matriz transposta.
         """
         return self.__conjugate_transpose(conjugate = False)
-
