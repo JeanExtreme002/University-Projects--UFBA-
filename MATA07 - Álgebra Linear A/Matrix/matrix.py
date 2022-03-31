@@ -7,10 +7,12 @@ class Matrix(object):
         # Verifica se o número de linhas ou colunas é menor que zero.
         if rows < 0 or columns < 0:
             raise MatrixOrderError("Matrix order must be at least '0x0'")
-        
+
+        # Inicializa os atributos privados do objeto.
         self.__complex_values = 0
         self.__non_zero_values = 0
-        
+    
+        # Cria uma lista para armazenar os elementos da matriz.
         self.__matrix = [[0,] * columns for i in range(rows)]
         self.__rows, self.__columns = rows, columns
     
@@ -19,8 +21,38 @@ class Matrix(object):
             self[index] = iterable[index]
 
     def __str__(self):
-        str_matrix = [[str(v) for v in self.__matrix[row]] for row in range(self.__rows)]
-        return "\n".join(["|" + ",".join(str_matrix[row]) + "|" for row in range(self.__rows)])
+        # Obtém o comprimento da maior string de elemento da matriz.
+        largest_string_length = 0
+
+        for row, column, element in self:
+            element_string_length = len(str(element))
+            
+            if element_string_length > largest_string_length:
+                largest_string_length = element_string_length
+
+        element_format = "{:>" + str(largest_string_length) + "}"
+        string = ""
+
+        # Constrói a string a ser retornada, tratando linha por linha.
+        for row in range(self.__rows):
+            string += "|"
+            
+            for column in range(self.__columns):
+                element = self[row: column]
+
+                # Remove os parênteses do número complexo e troca a letra "J" por "I".
+                if isinstance(element, complex):
+                    element = str(element).replace("(", "").replace(")", "").replace("j", "i")
+
+                # Adiciona o elemento à linha da string.
+                string += element_format.format(element) + (" " if column != (self.__columns - 1) else "")
+
+            # Finaliza a linha da string.
+            string += "|" + ("\n" if row != (self.__rows - 1) else "")
+        return string
+    
+    def __len__(self):
+        return len(self.__matrix)
 
     def __get_position_slice(self, position):
         # Caso seja obtido um índice (valor inteiro), a linha e coluna do elemento serão calculados.
@@ -41,20 +73,21 @@ class Matrix(object):
         Param value: Deve ser um número (int, float, complex).
         """
         position = self.__get_position_slice(position)
-
+        old_value = self[position.start: position.stop]
+        
         # Verifica se o tipo dos valores para determinar ao final
         # se existem números complexos na matriz.
-        if isinstance(self[position.start: position.stop], complex):
+        if isinstance(old_value, complex):
             if not isinstance(value, complex): self.__complex_values -= 1
         else:
             if isinstance(value, complex): self.__complex_values += 1
 
         # Verifica se o valor é zero para determinar ao final se a matriz é nula.
-        if self[position.start: position.stop] == 0:
+        if old_value == 0:
             if value != 0: self.__non_zero_values += 1
         else:
             if value == 0: self.__non_zero_values -= 1
-        
+
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
         self.__matrix[position.start][position.stop] = value
@@ -64,11 +97,14 @@ class Matrix(object):
         return self
 
     def __next__(self):
+        """
+        Retorna uma tupla no formato (linha, coluna, valor).
+        """
         # Obtém a linha e coluna a partir do índice.
         row, column = divmod(self.__iteration_index, self.__columns)
 
         # Verifica se o número de linha já excedeu.
-        if row >= len(self.__matrix): raise StopIteration
+        if row >= len(self): raise StopIteration
         
         self.__iteration_index += 1
         return row, column, self[row: column]
@@ -138,7 +174,7 @@ class Matrix(object):
         for row in range(self.__rows):
             for column in range(new_matrix_columns):
                 for index in range(self.__columns):
-                    new_matrix[row: column] += self.__matrix[row][index] * matrix[index: column]
+                    new_matrix[row: column] += self[row: index] * matrix[index: column]
         return new_matrix
 
     def __check_diagonal(self, value = 1):
@@ -179,8 +215,7 @@ class Matrix(object):
 
         for row, column, element in self:
             # Troca a linha pela coluna e a coluna pela linha, caso seja pedido a matriz transposta.
-            if transpose:
-                column, row = row, column
+            if transpose: column, row = row, column
 
             # Insere na posição (linha, coluna) o valor. Caso pedido, será inserido o valor conjugado.
             new_matrix[row: column] = element.conjugate() if conjugate else element
@@ -234,8 +269,8 @@ class Matrix(object):
 
         # Percorre a linha somando os seus elementos pelo elemento da outra na linha, na coluna correspondente. 
         for column in range(self.__columns):
-           if div: self.__matrix[row1][column] += self.__matrix[row2][column] / scalar
-           else: self.__matrix[row1][column] += self.__matrix[row2][column] * scalar
+           if div: self[row1: column] += self[row2: column] / scalar
+           else: self[row1: column] += self[row2: column] * scalar
       
     def conjugate(self):
         """
@@ -285,9 +320,9 @@ class Matrix(object):
 
         # Percorre as linhas trocando o valor de suas colunas.
         for column in range(self.__columns):
-            row1_value, row2_value = self.__matrix[row1][column], self.__matrix[row2][column]
-            self.__matrix[row1][column] = row2_value
-            self.__matrix[row2][column] = row1_value
+            row1_value, row2_value = self[row1: column], self[row2: column]
+            self[row1: column] = row2_value
+            self[row2: column] = row1_value
 
     def is_column(self):
         """
