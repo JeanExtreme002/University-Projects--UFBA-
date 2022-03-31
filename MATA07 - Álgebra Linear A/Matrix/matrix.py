@@ -86,7 +86,7 @@ class Matrix(object):
             if matrix[row: column] != element: return False
         return True
 
-    def __add__(self, matrix):
+    def __add__(self, matrix, *, sub = False):
         # Verifica se o argumento é uma matriz.
         if not self.__is_matrix(matrix):
             raise TypeError("Expected a Matrix object, not '{}'".format(type(matrix).__name__))
@@ -99,8 +99,11 @@ class Matrix(object):
 
         # Retorna uma nova matriz com as somas de seus elementos.
         for row, column, element in self:
-            new_matrix[row: column] = element + matrix[row: column]
+            new_matrix[row: column] = element + matrix[row: column] * (-1 if sub else 1)
         return new_matrix
+
+    def __sub__(self, matrix):
+        return self.__add__(matrix, sub = True)
 
     def __mul__(self, value):
         # Verifica se o valor é uma matriz. Se sim, verifica se o seu número de linhas é
@@ -212,15 +215,15 @@ class Matrix(object):
         # Retorna a posição em forma de índice comum (indo de zero à N). 
         return position - 1
 
-    def add(self, matrix):
+    def add(self, matrix, *, sub = True):
         """
-        Retorna uma matriz resultante da soma de matrizes.
+        Retorna uma matriz resultante da soma, ou subtração (sub = True), de matrizes.
         """
-        return self + matrix
+        return (self - matrix) if sub else (self + matrix)
 
     def add_row(self, row1, row2, *, sub = False):
         """
-        Soma, ou subtrai (caso sub=True), todos os elementos de uma linha por outra.
+        Soma, ou subtrai (sub = True), todos os elementos de uma linha por outra.
         """
         row1 = self.__verify_position(row1)
         row2 = self.__verify_position(row2)
@@ -373,14 +376,15 @@ class Matrix(object):
         """
         return self * value
 
-    def multiply_row(self, row, value):
+    def multiply_row(self, row, value, *, div = False):
         """
-        Multiplica todos os elementos de uma linha por um valor.
+        Multiplica, ou divide (div = True), todos os elementos de uma linha por um valor.
         """
         row = self.__verify_position(row)
 
         for column in range(self.__columns):
-            self[row: column] = self[row: column] * value
+            if div: self[row: column] = self[row: column] / value
+            else: self[row: column] = self[row: column] * value
 
     def set(self, row, column, value):
         """
