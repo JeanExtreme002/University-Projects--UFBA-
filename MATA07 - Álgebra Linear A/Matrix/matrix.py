@@ -28,7 +28,7 @@ class Matrix(object):
 
     def __getitem__(self, position):
         """
-        Param position: Pode ser um índice (inteiro) ou um slice [row: column].
+        Param position: Deve ser um índice (inteiro) ou um slice [row: column]. (OBS: As posições aqui devem começar de 0)
         """
         position = self.__get_position_slice(position)
 
@@ -37,7 +37,7 @@ class Matrix(object):
 
     def __setitem__(self, position, value):
         """
-        Param position: Deve ser um índice (inteiro) ou um slice [row: column].
+        Param position: Deve ser um índice (inteiro) ou um slice [row: column]. (OBS: As posições aqui devem começar de 0)
         Param value: Deve ser um número (int, float, complex).
         """
         position = self.__get_position_slice(position)
@@ -218,6 +218,16 @@ class Matrix(object):
         """
         return self + matrix
 
+    def add_row(self, row1, row2, *, sub = False):
+        """
+        Soma, ou subtrai (caso sub=True), todos os elementos de uma linha por outra.
+        """
+        row1 = self.__verify_position(row1)
+        row2 = self.__verify_position(row2)
+
+        for column in range(self.__columns):
+           self.__matrix[row1][column] += self.__matrix[row2][column] * (-1 if sub else 1)
+      
     def conjugate(self):
         """
         Retorna a matriz conjugada.
@@ -258,7 +268,17 @@ class Matrix(object):
         return self.__matrix[row].copy()
 
     def interchange_rows(self, row1, row2):
-        pass
+        """
+        Troca duas linhas de posição na matrix.
+        """
+        row1 = self.__verify_position(row1)
+        row2 = self.__verify_position(row2)
+
+        # Percorre as linhas trocando o valor de suas colunas.
+        for column in range(self.__columns):
+            row1_value, row2_value = self.__matrix[row1][column], self.__matrix[row2][column]
+            self.__matrix[row1][column] = row2_value
+            self.__matrix[row2][column] = row1_value
 
     def is_column(self):
         """
@@ -352,6 +372,15 @@ class Matrix(object):
         Retorna uma matriz resultante do produto da matriz por um escalar ou por outra matriz.
         """
         return self * value
+
+    def multiply_row(self, row, value):
+        """
+        Multiplica todos os elementos de uma linha por um valor.
+        """
+        row = self.__verify_position(row)
+
+        for column in range(self.__columns):
+            self[row: column] = self[row: column] * value
 
     def set(self, row, column, value):
         """
