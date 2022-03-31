@@ -221,15 +221,21 @@ class Matrix(object):
         """
         return (self - matrix) if sub else (self + matrix)
 
-    def add_row(self, row1, row2, *, sub = False):
+    def add_row(self, row1, row2, scalar = 1, *, div = False):
         """
-        Soma, ou subtrai (sub = True), todos os elementos de uma linha por outra.
+        Soma todos os elementos de uma linha por outra multiplicada por um escalar (default: scalar = 1).
         """
         row1 = self.__verify_position(row1)
         row2 = self.__verify_position(row2)
 
+        # Verifica se o escalar é um número.
+        if not self.__is_number(scalar):
+            raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(scalar).__name__))
+
+        # Percorre a linha somando os seus elementos pelo elemento da outra na linha, na coluna correspondente. 
         for column in range(self.__columns):
-           self.__matrix[row1][column] += self.__matrix[row2][column] * (-1 if sub else 1)
+           if div: self.__matrix[row1][column] += self.__matrix[row2][column] / scalar
+           else: self.__matrix[row1][column] += self.__matrix[row2][column] * scalar
       
     def conjugate(self):
         """
@@ -382,6 +388,7 @@ class Matrix(object):
         """
         row = self.__verify_position(row)
 
+        # Percorre a linha multiplicando os seus elementos pelo escalar. 
         for column in range(self.__columns):
             if div: self[row: column] = self[row: column] / value
             else: self[row: column] = self[row: column] * value
