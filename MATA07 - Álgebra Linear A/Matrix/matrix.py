@@ -52,32 +52,31 @@ class Matrix(object):
         return string
 
     def __repr__(self):
-        matrix_type = "C" if self.is_complex() else "R"
-        return "Matrix <{},{}> ({})".format(self.__rows, self.__columns, matrix_type)
+        matrix_type = "Complex" if self.is_complex() else "Real"
+        return "<{} Matrix : {},{}>".format(matrix_type, self.__rows, self.__columns)
     
     def __len__(self):
         return len(self.__matrix)
 
-    def __get_position_slice(self, position):
+    def __get_row_and_column(self, position):
         # Caso seja obtido um índice (valor inteiro), a linha e coluna do elemento serão calculados.
-        return slice(*divmod(position, self.__columns)) if isinstance(position, int) else position
+        position = slice(*divmod(position, self.__columns)) if isinstance(position, int) else position
+        return position.start, position.stop
 
     def __getitem__(self, position):
         """
         Param position: Deve ser um índice (inteiro) ou um slice [row: column]. (OBS: As posições aqui devem começar de 0)
         """
-        position = self.__get_position_slice(position)
-
-        # Retorna o valor na posição (linha, coluna).
-        return self.__matrix[position.start][position.stop]
+        row, column = self.__get_row_and_column(position)
+        return self.__matrix[row][column]
 
     def __setitem__(self, position, value):
         """
         Param position: Deve ser um índice (inteiro) ou um slice [row: column]. (OBS: As posições aqui devem começar de 0)
         Param value: Deve ser um número (int, float, complex).
         """
-        position = self.__get_position_slice(position)
-        old_value = self[position.start: position.stop]
+        row, column = self.__get_row_and_column(position)
+        old_value = self[row: column]
         
         # Verifica se o tipo dos valores para determinar ao final
         # se existem números complexos na matriz.
@@ -94,7 +93,7 @@ class Matrix(object):
 
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
-        self.__matrix[position.start][position.stop] = value
+        self.__matrix[row][column] = value
 
     def __iter__(self):
         self.__iteration_index = 0
