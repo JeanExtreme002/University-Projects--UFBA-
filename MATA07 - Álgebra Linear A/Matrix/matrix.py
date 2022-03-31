@@ -50,6 +50,10 @@ class Matrix(object):
             # Finaliza a linha da string.
             string += "|" + ("\n" if row != (self.__rows - 1) else "")
         return string
+
+    def __repr__(self):
+        matrix_type = "C" if self.is_complex() else "R"
+        return "Matrix <{},{}> ({})".format(self.__rows, self.__columns, matrix_type)
     
     def __len__(self):
         return len(self.__matrix)
