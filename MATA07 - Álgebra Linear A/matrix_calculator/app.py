@@ -91,6 +91,7 @@ class Application(object):
 
         # Multiplica, ou divide, uma linha por um escalar. 
         else:
+            if row2: raise SyntaxError("Não é possível multiplicar ou dividir uma linha por outra!")
             if not command["scalar"]: raise SyntaxError("Informe o escalar para multiplicar ou dividir a linha!")
             matrix.multiply_row(row1, scalar, div = True if command["operator"] == "/=" else False)
             
