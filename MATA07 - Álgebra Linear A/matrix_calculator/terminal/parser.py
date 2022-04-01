@@ -2,7 +2,7 @@ import re
 
 # Patterns para comandos de usuário.
 application_operation_pattern = "^([a-z]+)(\s.+|)"
-elementar_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=|<>)(-?[0-9]+\.[0-9]+|-?[0-9]+|)L?([0-9]+|)$"
+elementary_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=|<>|==)(-?[0-9]+\.[0-9]+|-?[0-9]+|)L?([0-9]+|)$"
 matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+)(\+|-|\*|/|tc|ct|c|t)([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+|)$"
 
 def parse_command(command):
@@ -15,8 +15,8 @@ def parse_command(command):
     if result: return {"operation": "matrix", "var": result[0][0], "x": result[0][1], "operator": result[0][2], "y": result[0][3]}
 
     # Verifica se o comando refere-se à uma operação elementar.
-    result = re.findall(elementar_operation_pattern, command.replace(" ", ""))
-    if result: return {"operation": "elementar", "row1": result[0][0], "operator": result[0][1], "scalar": result[0][2], "row2": result[0][3]}
+    result = re.findall(elementary_operation_pattern, command.replace(" ", ""))
+    if result: return {"operation": "elementary", "row1": result[0][0], "operator": result[0][1], "scalar": result[0][2], "row2": result[0][3]}
 
     raise SyntaxError("A sintaxe da instrução está incorreta!")
 

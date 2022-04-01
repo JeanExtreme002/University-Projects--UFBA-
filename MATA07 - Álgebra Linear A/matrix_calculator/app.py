@@ -29,12 +29,12 @@ class Application(object):
             
         # Imprime uma lista com todas as matrizes disponíveis.
         elif command["command"] == "list":
-            if self.__matrices: 
-                print("Lista de Matrizes:")
-                
-                for name in self.__matrices.keys():
-                    print("- {} <{},{}>".format(name, *self.__matrices[name].get_order()))
-            else: print("Nenhuma matriz disponível. Use o comando \"load <arquivo.ext>\".")
+            self.print_matrices()
+            input()
+
+        # Imprime uma lista com todas as propriedades da matriz atual.
+        elif command["command"] == "prop":
+            self.print_current_matrix_properties()
             input()
 
         # Define uma matriz a ser usada nas operações elementares.
@@ -49,20 +49,26 @@ class Application(object):
         # Imprime uma lista de comando do terminal.
         elif command["command"] == "help":
             print("Lista de Comandos do Terminal:")
-            print("{:<30} | Encerra o programa".format("- exit"))
-            print("{:<30} | Mostra uma lista com todas as matrizes".format("- list"))
-            print("{:<30} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
-            print("{:<30} | Mostra os comandos anteriores".format("- log <true | false>"))
-            print("{:<30} | Mostra a matriz que está sendo usada".format("- show <true | false>"))
-            print("{:<30} | Define uma matriz para ser usada".format("- use <matrix>"))
+            print("{:<20} | Encerra o programa".format("- exit"))
+            print("{:<20} | Mostra uma lista com todas as matrizes".format("- list"))
+            print("{:<20} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
+            print("{:<20} | Mostra os comandos anteriores".format("- log <true | false>"))
+            print("{:<20} | Mostra uma lista com todas as propriedades da matriz".format("- prop"))
+            print("{:<20} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
+            print("{:<20} | Define uma matriz para ser utilizada".format("- use <matrix>"))
             input()
 
         # Encerra a aplicação.
         elif command["command"] == "exit":
             self.stop()
+
+        # Caso nenhuma condição acima seja atendida, o comando não existe.
+        else: raise ValueError("Esse comando não existe.")
     
-    def __execute_elementar_operation(self, command):
-        matrix = self.__matrices[self.__current_matrix_name]
+    def __execute_elementary_operation(self, command):
+        try: matrix = self.__matrices[self.__current_matrix_name]
+        except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
+        
         row1, row2 = int(command["row1"]), (int(command["row2"]) if command["row2"] else None)
         scalar = float(command["scalar"]) if command["scalar"] else 1
 
@@ -72,8 +78,14 @@ class Application(object):
             if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
             matrix.interchange_rows(row1, row2)
 
+        # Verifica se as linhas são iguais.
+        if command["operator"] == "==":
+            if not row2: raise SyntaxError("Informe a linha que deseja verificar a igualdade!")
+            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
+            input(matrix.get_row(row1) == matrix.get_row(row2))
+            
         # Soma, ou subtrai, uma linha por outra linha.
-        elif if command["operator"] in "+=-=":
+        elif command["operator"] in "+=-=":
             if not row2: raise SyntaxError("Somas e subtrações de linhas são feitas apenas por outras linhas!")
             matrix.add_row(row1, row2, scalar * (-1 if "-" in command["operator"] else 1))
 
@@ -161,7 +173,7 @@ class Application(object):
         return {
             "application": self.__execute_application_operation,
             "matrix": self.__execute_matrix_operation,
-            "elementar": self.__execute_elementar_operation
+            "elementary": self.__execute_elementary_operation
         }[command["operation"]](command)
         
     def print_current_matrix(self):
@@ -169,13 +181,52 @@ class Application(object):
         Imprime a matrix que está sendo usada.
         """
         if self.__current_matrix_name:
-            print("Atualmente usando a matriz \"{}\".".format(self.__current_matrix_name))
-            
+            print("Atualmente usando a matriz \"{}\". [{} {}]".format(
+                self.__current_matrix_name, len(self.__matrices),
+                "disponíveis" if len(self.__matrices) > 1 else "disponível"
+            ))
+
+            # Mostra a matriz, caso o usuário queira.
             if self.__show_matrix:
                 print()
                 print(self.__matrices[self.__current_matrix_name])
-        else: print("Atualmente nenhuma matriz está sendo usada.")
+                
+        else:
+            print("Atualmente nenhuma matriz está sendo usada. [{} {}]".format(
+                len(self.__matrices), "disponíveis" if len(self.__matrices) > 1 else "disponível"
+            ))
         print("\n")
+
+    def print_current_matrix_properties(self):
+        """
+        Imprime as propriedades da matriz.
+        """
+        try: matrix = self.__matrices[self.__current_matrix_name]
+        except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
+        
+        print("Propriedades da Matrix:")
+        print("- Anti-hermitiana:", matrix.is_skew_hermitian())
+        print("- Anti-simétrica:", matrix.is_skew_symmetric())
+        print("- Coluna:", matrix.is_column())
+        print("- Complexa:", matrix.is_complex())
+        print("- Diagonal:", matrix.is_diagonal())
+        print("- Escalar:", matrix.is_scalar())
+        print("- Identidade:", matrix.is_identity())
+        print("- Hermitiana:", matrix.is_hermitian())
+        print("- Linha:", matrix.is_row())
+        print("- Nula:", matrix.is_null())
+        print("- Quadrada:", matrix.is_square())
+        print("- Simétrica:", matrix.is_symmetric())
+        print("- Triangular Inferior:", matrix.is_lower_triangular())
+        print("- Triangular Superior:", matrix.is_upper_triangular())
+        
+    def print_matrices(self):
+        if self.__matrices: 
+            print("Lista de Matrizes:")
+            
+            for name in self.__matrices.keys():
+                print("- {} <{},{}>".format(name, *self.__matrices[name].get_order()))
+        else: print("Nenhuma matriz disponível. Use o comando \"load <arquivo.ext>\".")
 
     def print_old_commands(self):
         """
