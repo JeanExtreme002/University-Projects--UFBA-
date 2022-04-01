@@ -5,8 +5,8 @@ class Matrix(object):
     
     def __init__(self, rows, columns, iterable = []):
         # Verifica se o número de linhas ou colunas é menor que zero.
-        if rows < 0 or columns < 0:
-            raise MatrixOrderError("Matrix order must be at least '0x0'")
+        if rows <= 0 or columns <= 0:
+            raise MatrixOrderError("Matrix order must be at least '1x1'")
 
         # Inicializa os atributos privados do objeto.
         self.__complex_values = 0
@@ -57,6 +57,11 @@ class Matrix(object):
     
     def __len__(self):
         return len(self.__matrix)
+
+    def __contains__(self, value):
+        for row in self.__matrix:
+            if value in row: return True
+        return False
 
     def __get_row_and_column(self, position):
         # Caso seja obtido um índice (valor inteiro), a linha e coluna do elemento serão calculados.
