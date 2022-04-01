@@ -62,8 +62,26 @@ class Application(object):
             self.stop()
     
     def __execute_elementar_operation(self, command):
-        pass
-    
+        matrix = self.__matrices[self.__current_matrix_name]
+        row1, row2 = int(command["row1"]), (int(command["row2"]) if command["row2"] else None)
+        scalar = float(command["scalar"]) if command["scalar"] else 1
+
+        # Troca a posição de duas linhas.
+        if command["operator"] == "<>":
+            if not row2: raise SyntaxError("Informe a linha que deseja trocar!")
+            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
+            matrix.interchange_rows(row1, row2)
+
+        # Soma, ou subtrai, uma linha por outra linha.
+        elif if command["operator"] in "+=-=":
+            if not row2: raise SyntaxError("Somas e subtrações de linhas são feitas apenas por outras linhas!")
+            matrix.add_row(row1, row2, scalar * (-1 if "-" in command["operator"] else 1))
+
+        # Multiplica, ou divide, uma linha por um escalar. 
+        else:
+            if not command["scalar"]: raise SyntaxError("Informe o escalar para multiplicar ou dividir a linha!")
+            matrix.multiply_row(row1, scalar, div = True if command["operator"] == "/=" else False)
+            
     def __execute_matrix_operation(self, command):
 
         # Obtém a matriz conjugada.

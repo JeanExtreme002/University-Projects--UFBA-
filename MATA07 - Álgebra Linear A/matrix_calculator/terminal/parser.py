@@ -2,8 +2,8 @@ import re
 
 # Patterns para comandos de usuário.
 application_operation_pattern = "^([a-z]+)(\s.+|)"
-elementar_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=)([0-9]+\.[0-9]+|[0-9]+|)L?([0-9]+|)$"
-matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|[0-9]+\.[0-9]+|[0-9]+)(\+|-|\*|/|tc|ct|c|t)([A-Z]+|[0-9]+\.[0-9]+|[0-9]+|)$"
+elementar_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=|<>)(-?[0-9]+\.[0-9]+|-?[0-9]+|)L?([0-9]+|)$"
+matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+)(\+|-|\*|/|tc|ct|c|t)([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+|)$"
 
 def parse_command(command):
     # Verifica se o comando refere-se à um comando da aplicação. 
