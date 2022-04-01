@@ -149,27 +149,35 @@ class Matrix(object):
     def __sub__(self, matrix):
         return self.__add__(matrix, sub = True)
 
-    def __mul__(self, value):
+    def __truediv__(self, value):
+        return self.__mul__(value, div = True)
+
+    def __mul__(self, value, *, div = False):
         # Verifica se o valor é uma matriz. Se sim, verifica se o seu número de linhas é
         # o mesmo do número de colunas do objeto.
-        if self.__is_matrix(value):
+        if not div and self.__is_matrix(value):
             if self.__columns == value.get_order()[0]:
                 return self.__mul_by_matrix(value)
             else:
                 raise MatrixOrderError("The number of rows must equal the number of columns.")
             
-        # Verifica se o valor é um número.    
+        # Verifica se o valor é um número e o multiplica, ou divide.    
         elif self.__is_number(value):
-            return self.__mul_by_number(value)
-            
+            return self.__mul_by_number(value, div = div)
+
+        # Se a operação de divisão foi solicitada, e o valor não é um número, então não é possível dividir.
+        elif div: raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
+
+        # Gera um erro se o valor não for um número ou matriz.
         else: raise TypeError("Value must be a number (int, float or complex) or a Matrix object, not '{}'".format(type(value).__name__))
     
-    def __mul_by_number(self, value):
+    def __mul_by_number(self, value, *, div = False):
         new_matrix = Matrix(*self.get_order())
         
         # Retorna uma nova matriz com o produto de cada elemento pelo valor recebido.
         for row, column, element in self:
-            new_matrix[row: column] = element * value
+            if div: new_matrix[row: column] = element / value
+            else: new_matrix[row: column] = element * value
         return new_matrix
 
     def __mul_by_matrix(self, matrix):
@@ -291,7 +299,13 @@ class Matrix(object):
         Retorna a matriz transconjugada.
         """
         return self.__conjugate_transpose()
-    
+
+    def div(self, value):
+        """
+        Retorna uma matriz resultante da divisão da matriz por um escalar.
+        """
+        return self / value
+
     def get(self, row, column):
         """
         Obtém um elemento na posição (linha >= 1, coluna >= 1).
