@@ -9,25 +9,27 @@ Para operações de linhas de matrizes, a instrução deve ser iniciada com um *
 
 O arquivo de matrizes pode estar em qualquer extensão, contendo quantas matrizes desejar, desde que esteja no seguinte formato:
 ```
-MATRIZ_A X,Y: valor1,valor2,valor3...
-MATRIZ_B X,Y: valor1,valor2,valor3...
+MATRIZ_A X,Y: valor1, valor2, valor3...
+MATRIZ_B X,Y: valor1, valor2, valor3...
 ```
 Observação: Os valores também podem ser complexos, devendo estar no formato **x+yi** ou **x-yi**. Além disso, não é necessário preencher a matriz. Caso não
 haja valores o suficiente, o resto dos elementos será automaticamente zero. Exemplo de arquivo:
 ```
-MATRIZA 3,5: 5,-12,8.5,-9+7i,24-13.5i,5+i,-34
-MATRIZB 7,8: -4i 5.7,120,-7,-i,0,55,-1-i,9999
+MATRIZA 3,5: 5, -12, 8.5, -9+7i, 24-13.5i, 5+i, -34
+MATRIZB 7,8: -4i, 5.7, 120, -7, -i, 0, 55, -1-i, 9999
 ```
 
 # Comandos do Terminal:
 | Comando                    | Descrição                                            |
 | -------------------------- | ---------------------------------------------------- |
+| delete                     | Deleta uma matriz                                    |
 | exit                       | Encerra o programa                                   |
 | help                       | Mostra uma lista com todos os comandos do terminal   |
 | list                       | Mostra uma lista com todas as matrizes               |
 | load \<arquivo.ext\>       | Carrega um arquivo contendo matrizes                 |
 | log \<true \| false\>      | Mostra os comandos anteriores                        |
 | prop                       | Mostra uma lista com todas as propriedades da matriz |
+| save \<arquivo.ext\>       | Salva as matrizes em um arquivo                      |
 | show \<true \| false\>     | Mostra a matriz que está sendo utilizada             |
 | use <matrix>               | Define uma matriz para ser utilizada                 |
   
