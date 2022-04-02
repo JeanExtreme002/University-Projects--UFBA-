@@ -1,9 +1,10 @@
 # Sobre:
 
 Essa é uma aplicação escrita em Python 3 para realizar operações de matrizes. Através do terminal, é possível realizar três tipos de instruções: comandos de terminal, 
-operações de matrizes e operações de linhas de matrizes. Os comandos de terminal são escritos sempre em **minúsculo**. Para realizar operações de matrizes, a instrução 
-sempre inicia-se com o nome de uma matriz, sempre em **maiúsculo** sem sinal — ela pode ser criada dinamicamente como uma variável — seguida do operador de atribuição (igualdade).
-Para operações de linhas de matrizes, a instrução deve ser iniciada com um **L maiúsculo**, seguida da posição da linha (valor inteiro) na matriz, no qual será manipulada.
+operações de matrizes e operações de linhas de matrizes. Os comandos de terminal são escritos sempre em **minúsculo**, enquanto em operações de matrizes, a instrução 
+sempre inicia-se com o nome de uma matriz em **maiúsculo**, com letras apenas — ela pode ser criada dinamicamente como uma variável — seguida do operador de atribuição.
+
+Para operações de linhas de matrizes, a instrução deve ser iniciada com um **L maiúsculo**, seguida da posição da linha (valor inteiro) na matriz, no qual será manipulada. Já em operações aritméticas com elementos de matrizes, os elementos devem ser escritos com um **E maiúsculo**, seguidos da sua posição (linha, coluna) separados por uma vírgula.
 
 # Arquivo de Matrizes:
 
@@ -69,4 +70,14 @@ L(a) -= XL(b)                   // Subtrai L(b) (opcional: multiplicado por um e
 L(a) *= X                       // Multiplica L(a) por um escalar
   
 L(a) /= X                       // Divide L(a) por um escalar
+```
+
+# Operações Aritméticas com Elementos de Matrizes:
+
+É uma expressão aritmética normal, possuindo um ou mais elementos da matriz no formato **E(r),(c)**. Nessa operação,
+você não pode atribuir valores à matriz. Apenas utilizá-las para realizar cálculo, no qual, o resultado será mostrado na tela.
+Veja o exemplo abaixo, em que todos os possíveis operadores aritméticos são utilizados:
+
+```
+5 * (E1,2 + 17.5 - E4,9) - (E5,5 ** 3) / 2 + E13,5 % 2
 ```
