@@ -53,7 +53,7 @@ class Application(object):
 
             # Verifica se a matriz existe.
             if not command["args"] in self.__matrices:
-                raise KeyError("A matriz \"{}\" não existe!".format(command["args"]))
+                raise KeyError("A matriz \"{}\" não existe.".format(command["args"]))
             
             self.__current_matrix_name = command["args"]
 
@@ -88,37 +88,38 @@ class Application(object):
 
         # Troca a posição de duas linhas.
         if command["operator"] == "<>":
-            if not row2: raise SyntaxError("Informe a linha que deseja trocar!")
-            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
+            if not row2: raise SyntaxError("Informe a linha que deseja trocar.")
+            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar.")
             matrix.interchange_rows(row1, row2)
 
         # Verifica se as linhas são iguais.
-        if command["operator"] == "==":
-            if not row2: raise SyntaxError("Informe a linha que deseja verificar a igualdade!")
+        elif command["operator"] == "==":
+            if not row2: raise SyntaxError("Informe a linha que deseja verificar a igualdade.")
             if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
             input(matrix.get_row(row1) == matrix.get_row(row2))
             
         # Soma, ou subtrai, uma linha por outra linha.
         elif command["operator"] in "+=-=":
+            if row1 == row2: raise ValueError("Somar ou subtrair pela mesma linha não é uma operação elementar!")
             if not row2: raise SyntaxError("Somas e subtrações de linhas são feitas apenas por outras linhas!")
             matrix.add_row(row1, row2, scalar * (-1 if "-" in command["operator"] else 1))
 
         # Multiplica, ou divide, uma linha por um escalar. 
         else:
             if row2: raise SyntaxError("Não é possível multiplicar ou dividir uma linha por outra!")
-            if not command["scalar"]: raise SyntaxError("Informe o escalar para multiplicar ou dividir a linha!")
+            if not command["scalar"]: raise SyntaxError("Informe o escalar para multiplicar ou dividir a linha.")
             matrix.multiply_row(row1, scalar, div = True if command["operator"] == "/=" else False)
             
     def __execute_matrix_operation(self, command):
         # Obtém a matriz conjugada.
         if "c" in command["operator"]:
-            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["x"]))
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
             self.__matrices[command["var"]] = self.__matrices[command["x"]].conjugate()
 
         # Obtém a matriz transposta.
         if "t" in command["operator"]:
-            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["x"]))
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
             self.__matrices[command["var"]] = self.__matrices[command["x"]].transpose()
 
@@ -127,11 +128,11 @@ class Application(object):
 
             # Verifica se existem duas matrizes.
             if not command["x"].isalpha() or not command["y"].isalpha():
-                raise SyntaxError("Para operações de soma e subtração, é necessário duas matrizes!")
+                raise SyntaxError("Para operações de soma e subtração, é necessário duas matrizes.")
 
             # Verifica se elas existem.
-            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["x"]))
-            if not command["y"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["y"]))
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
+            if not command["y"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["y"]))
 
             # Faz a soma, ou subtração, das matrizes.
             try:
@@ -144,7 +145,7 @@ class Application(object):
 
             # Verifica se existe pelo menos uma matriz.
             if not command["x"].isalpha():
-                raise SyntaxError("Informe uma matriz à esquerda para operações de multiplicação e divisão!")
+                raise SyntaxError("Informe uma matriz à esquerda para operações de multiplicação e divisão.")
 
             # Verifica se as matrizes existem.
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["x"]))
