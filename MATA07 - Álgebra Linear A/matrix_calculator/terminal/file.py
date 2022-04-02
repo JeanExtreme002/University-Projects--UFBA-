@@ -17,6 +17,8 @@ def load_matrices(filename, convert_to):
             # Obtém a ordem da matrix.
             order = [int(v) for v in order.split(",", maxsplit = 1)]
 
+            # Verifica se o nome da matriz e adiciona ao dicionário.
+            if not name.isalpha(): raise ValueError("O nome \"{}\" para matriz não é permitido!".format(name))
             matrices[name] = list()
             
             # Obtém uma lista com todos os valores da matriz
