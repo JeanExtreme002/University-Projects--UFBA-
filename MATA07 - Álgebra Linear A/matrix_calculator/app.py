@@ -12,7 +12,6 @@ class Application(object):
     __current_matrix_name = None
 
     def __execute_application_operation(self, command):
-        
         # Carrega as matrizes de um arquivo.
         if command["command"] == "load":
             self.__matrices.update(file.load_matrices(command["args"], convert_to = Matrix))
@@ -46,7 +45,7 @@ class Application(object):
 
         # Imprime uma lista com todas as propriedades da matriz atual.
         elif command["command"] == "prop":
-            self.print_current_matrix_properties()
+            self.print_matrix_properties(command["args"])
             input()
 
         # Define uma matriz a ser usada nas operações elementares.
@@ -67,7 +66,7 @@ class Application(object):
             print("{:<22} | Mostra uma lista com todas as matrizes".format("- list"))
             print("{:<22} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
             print("{:<22} | Mostra os comandos anteriores".format("- log <true | false>"))
-            print("{:<22} | Mostra uma lista com todas as propriedades da matriz".format("- prop"))
+            print("{:<22} | Mostra uma lista com todas as propriedades da matriz".format("- prop <matrix>"))
             print("{:<22} | Salva as matrizes em um arquivo".format("- save <arquivo.ext>"))
             print("{:<22} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
             print("{:<22} | Define uma matriz para ser utilizada".format("- use <matrix>"))
@@ -212,12 +211,12 @@ class Application(object):
             ))
         print("\n")
 
-    def print_current_matrix_properties(self):
+    def print_matrix_properties(self, name):
         """
         Imprime as propriedades da matriz.
         """
-        try: matrix = self.__matrices[self.__current_matrix_name]
-        except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
+        try: matrix = self.__matrices[name]
+        except: raise KeyError("A matriz \"{}\" não existe!".format(name))
         
         print("Propriedades da Matrix:")
         print("- Anti-hermitiana:", matrix.is_skew_hermitian())
@@ -232,6 +231,7 @@ class Application(object):
         print("- Nula:", matrix.is_null())
         print("- Quadrada:", matrix.is_square())
         print("- Simétrica:", matrix.is_symmetric())
+        print("- Traço:", str(matrix.trace()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
         print("- Triangular Inferior:", matrix.is_lower_triangular())
         print("- Triangular Superior:", matrix.is_upper_triangular())
         
