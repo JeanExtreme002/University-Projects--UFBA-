@@ -1,6 +1,6 @@
 # Sobre:
 
-Essa é uma aplicação escrita em Python 3 para realizar operações de matrizes. Através do terminal, é possível realizar quatro tipos de instruções: comandos de terminal, operações de matrizes, operações de linhas de matrizes e operações aritméticas com elementos de matrizes. Os comandos de terminal são escritos sempre em **minúsculo**, enquanto em operações de matrizes, a instrução sempre inicia-se com o nome de uma matriz em **maiúsculo**, com letras apenas — ela pode ser criada dinamicamente como uma variável — seguida do operador de atribuição.
+Essa é uma aplicação, em Python 3, para realizar operações de matrizes. Através do terminal, é possível realizar quatro tipos de instruções: comandos de terminal, operações de matrizes, operações de linhas de matrizes e operações aritméticas com elementos de matrizes. Os comandos de terminal são escritos sempre em **minúsculo**, enquanto em operações de matrizes, a instrução sempre inicia-se com o nome de uma matriz em **maiúsculo**, com letras apenas — ela pode ser criada dinamicamente como uma variável — seguida do operador de atribuição.
 
 Para operações de linhas de matrizes, a instrução deve ser iniciada com um **L maiúsculo**, seguida da posição da linha (valor inteiro) na matriz, no qual será manipulada. Já em operações aritméticas com elementos de matrizes, os elementos devem ser escritos com um **E maiúsculo**, seguidos da sua posição (linha, coluna) separados por uma vírgula.
 
