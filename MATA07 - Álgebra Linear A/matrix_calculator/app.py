@@ -17,6 +17,18 @@ class Application(object):
         if command["command"] == "load":
             self.__matrices.update(file.load_matrices(command["args"], convert_to = Matrix))
 
+        # Salva as matrizes em um arquivo.
+        elif command["command"] == "save":
+            file.save_matrices(command["args"], self.__matrices)
+
+        # Deleta uma matriz do dicionário de matrizes.
+        elif command["command"] == "delete":
+            self.__matrices.pop(command["args"])
+
+            # Verifica se a matriz deletada era a que estava em uso.
+            if command["args"] == self.__current_matrix_name:
+                self.__current_matrix_name = None
+
         # Altera a configuração de imprimir a matriz na tela.
         elif command["command"] == "show":
             if not command["args"].lower() in ["true", "false"]: raise ValueError("Você deve informar a configuração! (true ou false)")
@@ -49,13 +61,16 @@ class Application(object):
         # Imprime uma lista de comando do terminal.
         elif command["command"] == "help":
             print("Lista de Comandos do Terminal:")
-            print("{:<20} | Encerra o programa".format("- exit"))
-            print("{:<20} | Mostra uma lista com todas as matrizes".format("- list"))
-            print("{:<20} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
-            print("{:<20} | Mostra os comandos anteriores".format("- log <true | false>"))
-            print("{:<20} | Mostra uma lista com todas as propriedades da matriz".format("- prop"))
-            print("{:<20} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
-            print("{:<20} | Define uma matriz para ser utilizada".format("- use <matrix>"))
+            print("{:<22} | Deleta uma matriz".format("- delete <matrix>"))
+            print("{:<22} | Encerra o programa".format("- exit"))
+            print("{:<22} | Mostra uma lista com todos os comandos do terminal".format("- help"))
+            print("{:<22} | Mostra uma lista com todas as matrizes".format("- list"))
+            print("{:<22} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
+            print("{:<22} | Mostra os comandos anteriores".format("- log <true | false>"))
+            print("{:<22} | Mostra uma lista com todas as propriedades da matriz".format("- prop"))
+            print("{:<22} | Salva as matrizes em um arquivo".format("- save <arquivo.ext>"))
+            print("{:<22} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
+            print("{:<22} | Define uma matriz para ser utilizada".format("- use <matrix>"))
             input()
 
         # Encerra a aplicação.
@@ -96,7 +111,6 @@ class Application(object):
             matrix.multiply_row(row1, scalar, div = True if command["operator"] == "/=" else False)
             
     def __execute_matrix_operation(self, command):
-
         # Obtém a matriz conjugada.
         if "c" in command["operator"]:
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["x"]))
