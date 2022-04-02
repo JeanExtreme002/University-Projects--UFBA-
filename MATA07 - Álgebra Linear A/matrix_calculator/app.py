@@ -14,7 +14,8 @@ class Application(object):
     def __execute_application_operation(self, command):
         # Carrega as matrizes de um arquivo.
         if command["command"] == "load":
-            self.__matrices.update(file.load_matrices(command["args"], convert_to = Matrix))
+            try: self.__matrices.update(file.load_matrices(command["args"], convert_to = Matrix))
+            except FileNotFoundError: raise FileNotFoundError("Esse arquivo não existe.")
 
         # Salva as matrizes em um arquivo.
         elif command["command"] == "save":
@@ -78,8 +79,33 @@ class Application(object):
 
         # Caso nenhuma condição acima seja atendida, o comando não existe.
         else: raise ValueError("Esse comando não existe.")
+
+    def __execute_arithmetic_operation(self, command):
+        # Obtém a matriz definida pelo usuário para ser utilizada.
+        try: matrix = self.__matrices[self.__current_matrix_name]
+        except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
+
+        # Substitui os E(posição) pelos seus respectivos valores.
+        for element in command["elements"]:
+            row, column = element[1:].split(",")
+            row, column = int(row), int(column)
+
+            # Obtém o valor a partir da posição do elemento.
+            try: value = matrix.get(row, column)
+            except: raise IndexError("A posição E{},{} não existe.".format(row, column))
+
+            # Formata o valor caso ele seja complexo.
+            if isinstance(value, complex): value = "complex({},{})".format(value.real, value.imag)
+
+            # Insere o valor na expressão.
+            command["expression"] = command["expression"].replace(element, str(value))
+
+        # Realiza o cálculo.
+        try: input("Resultado: " + str(eval(command["expression"])).replace("(","").replace(")","").replace("j","i"))
+        except: raise SyntaxError("A expressão está incorreta!")
     
     def __execute_elementary_operation(self, command):
+        # Obtém a matriz definida pelo usuário para ser utilizada.
         try: matrix = self.__matrices[self.__current_matrix_name]
         except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
         
@@ -188,7 +214,8 @@ class Application(object):
         return {
             "application": self.__execute_application_operation,
             "matrix": self.__execute_matrix_operation,
-            "elementary": self.__execute_elementary_operation
+            "elementary": self.__execute_elementary_operation,
+            "arithmetic": self.__execute_arithmetic_operation
         }[command["operation"]](command)
         
     def print_current_matrix(self):
@@ -224,7 +251,7 @@ class Application(object):
         print("- Anti-simétrica:", matrix.is_skew_symmetric())
         print("- Coluna:", matrix.is_column())
         print("- Complexa:", matrix.is_complex())
-        print("- Determinante:", str(matrix.get_determinant()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
+        print("- Determinante:", str(matrix.get_determinant()).replace("(","").replace(")","").replace("j","") if matrix.is_square() else "N/D")
         print("- Diagonal:", matrix.is_diagonal())
         print("- Escalar:", matrix.is_scalar())
         print("- Identidade:", matrix.is_identity())
@@ -233,7 +260,7 @@ class Application(object):
         print("- Nula:", matrix.is_null())
         print("- Quadrada:", matrix.is_square())
         print("- Simétrica:", matrix.is_symmetric())
-        print("- Traço:", str(matrix.get_trace()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
+        print("- Traço:", str(matrix.get_trace()).replace("(","").replace(")","").replace("j","") if matrix.is_square() else "N/D")
         print("- Triangular Inferior:", matrix.is_lower_triangular())
         print("- Triangular Superior:", matrix.is_upper_triangular())
         

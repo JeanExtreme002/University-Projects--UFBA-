@@ -2,6 +2,7 @@ import re
 
 # Patterns para comandos de usuário.
 application_operation_pattern = "^([a-z]+)(\s.+|)"
+element_operation_pattern = "E[0-9]+,[0-9]+"
 elementary_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=|<>|==)(-?[0-9]+\.[0-9]+|-?[0-9]+|)L?([0-9]+|)$"
 matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+)(\+|-|\*|/|tc|ct|c|t)([A-Z]+|-?[0-9]+\.[0-9]+|-?[0-9]+|)$"
 
@@ -17,6 +18,10 @@ def parse_command(command):
     # Verifica se o comando refere-se à uma operação elementar.
     result = re.findall(elementary_operation_pattern, command.replace(" ", ""))
     if result: return {"operation": "elementary", "row1": result[0][0], "operator": result[0][1], "scalar": result[0][2], "row2": result[0][3]}
+
+    # Verifica se o comando refere-se à uma operação de aritmética com elementos.
+    result = re.findall(element_operation_pattern, command)
+    if result and all([char in " E,.0123456789+-/%*()" for char in command]): return {"operation": "arithmetic", "expression": command, "elements": result}
 
     raise SyntaxError("A sintaxe da instrução está incorreta!")
 
