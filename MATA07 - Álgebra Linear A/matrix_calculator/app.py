@@ -223,6 +223,7 @@ class Application(object):
         print("- Anti-simétrica:", matrix.is_skew_symmetric())
         print("- Coluna:", matrix.is_column())
         print("- Complexa:", matrix.is_complex())
+        print("- Determinante:", str(matrix.get_determinant()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
         print("- Diagonal:", matrix.is_diagonal())
         print("- Escalar:", matrix.is_scalar())
         print("- Identidade:", matrix.is_identity())
@@ -231,7 +232,7 @@ class Application(object):
         print("- Nula:", matrix.is_null())
         print("- Quadrada:", matrix.is_square())
         print("- Simétrica:", matrix.is_symmetric())
-        print("- Traço:", str(matrix.trace()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
+        print("- Traço:", str(matrix.get_trace()).replace("(","").replace(")","").replace("i","") if matrix.is_square() else "N/D")
         print("- Triangular Inferior:", matrix.is_lower_triangular())
         print("- Triangular Superior:", matrix.is_upper_triangular())
         

@@ -320,9 +320,32 @@ class Matrix(object):
         column = self.__verify_position(column, row = False)
         return [self[row: column] for row in range(self.__rows)]
 
+    def get_determinant(self):
+        if not self.is_square():
+            raise MatrixOrderError("Must be a square matrix")
+
+        # O determinante de uma matriz de ordem 1 é o próprio valor.
+        if self.__rows == 1:
+            return self[0] if self[0] != 0 else 0
+
+        # Caso a matriz seja de ordem 2, basta utilizar a fórmula (AD - BC)
+        if self.__rows == 2:
+            determinant = self[0] * self[3] - self[1] * self[2]
+            return determinant if determinant != 0 else 0
+
+        determinant = 0
+
+        # Calcula o determinante recursivamente, multiplicando os elementos da
+        # primeira linha pelos seus cofatores e os somando.
+        for column in range(self.__columns):
+            cofactor = (-1 if column % 2 != 0 else 1) * self.get_minor(1, column + 1).get_determinant()
+            determinant += self[0: column] * cofactor
+            
+        return determinant if determinant != 0 else 0
+
     def get_minor(self, row, column):
         """
-        Obtém uma matriz complementar, removendo a linha e coluna especificada (linha >= 1, coluna >= 1).
+        Obtém o menor complementar da matriz, removendo a linha e coluna especificada (linha >= 1, coluna >= 1).
         """
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         new_matrix = Matrix(self.__rows - 1, self.__columns - 1)
@@ -351,6 +374,19 @@ class Matrix(object):
         """
         row = self.__verify_position(row)
         return self.__matrix[row].copy()
+
+    def get_trace(self):
+        """
+        Retorna o traço da matriz.
+        """
+        if not self.is_square():
+            raise MatrixOrderError("Must be a square matrix")
+        
+        value = 0
+        
+        for index in range(self.__rows):
+            value += self[index: index]
+        return value
 
     def interchange_rows(self, row1, row2):
         """
@@ -503,19 +539,6 @@ class Matrix(object):
         # Insere os valores do iterável em cada coluna, na linha especificada, da matriz.
         for column in range(self.__columns):
             self[row: column] = iterable[column]
-
-    def trace(self):
-        """
-        Retorna o traço da matriz.
-        """
-        if not self.is_square():
-            raise MatrixOrderError("Must be a square matrix")
-        
-        value = 0
-        
-        for index in range(self.__rows):
-            value += self[index: index]
-        return value
 
     def transpose(self):
         """
