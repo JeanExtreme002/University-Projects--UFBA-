@@ -320,6 +320,25 @@ class Matrix(object):
         column = self.__verify_position(column, row = False)
         return [self[row: column] for row in range(self.__rows)]
 
+    def get_minor(self, row, column):
+        """
+        Obtém uma matriz complementar, removendo a linha e coluna especificada (linha >= 1, coluna >= 1).
+        """
+        row, column = self.__verify_position(row), self.__verify_position(column, row = False)
+        new_matrix = Matrix(self.__rows - 1, self.__columns - 1)
+
+        index = 0
+
+        # Percorre todos os elementos da matriz e adiciona à nova matriz
+        # somente os que não pertencem à linha e coluna especificada.
+        for value_row, value_column, value in self:
+            
+            if value_row != row and value_column != column:
+                new_matrix[index] = value
+                index += 1
+                
+        return new_matrix
+
     def get_order(self):
         """
         Retorna o número de linhas e colunas que a matriz possui.
