@@ -22,16 +22,16 @@ MATRIZB 7,8: -4i, 5.7, 120, -7, -i, 0, 55, -1-i, 9999
 # Comandos do Terminal:
 | Comando                    | Descrição                                            |
 | -------------------------- | ---------------------------------------------------- |
-| delete                     | Deleta uma matriz                                    |
+| delete \<matrix\>          | Deleta uma matriz                                    |
 | exit                       | Encerra o programa                                   |
 | help                       | Mostra uma lista com todos os comandos do terminal   |
 | list                       | Mostra uma lista com todas as matrizes               |
 | load \<arquivo.ext\>       | Carrega um arquivo contendo matrizes                 |
 | log \<true \| false\>      | Mostra os comandos anteriores                        |
-| prop                       | Mostra uma lista com todas as propriedades da matriz |
+| prop \<matrix\>            | Mostra uma lista com todas as propriedades da matriz |
 | save \<arquivo.ext\>       | Salva as matrizes em um arquivo                      |
 | show \<true \| false\>     | Mostra a matriz que está sendo utilizada             |
-| use <matrix>               | Define uma matriz para ser utilizada                 |
+| use \<matrix\>             | Define uma matriz para ser utilizada                 |
   
 # Operações de Matrizes:
 
