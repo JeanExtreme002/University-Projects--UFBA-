@@ -11,6 +11,9 @@ class Application(object):
     __show_old_commands = False
     __current_matrix_name = None
 
+    def __convert_to_numeric_type(self, string):
+        return parser.parse_complex_value(string) if "(" in string else float(string)
+
     def __execute_application_operation(self, command):
         # Carrega as matrizes de um arquivo.
         if command["command"] == "load":
@@ -108,9 +111,10 @@ class Application(object):
         # Obtém a matriz definida pelo usuário para ser utilizada.
         try: matrix = self.__matrices[self.__current_matrix_name]
         except: raise KeyError("Nenhuma matriz está sendo utilizada no momento.")
-        
+
+        # Transforma os valores recebidos para os seus respectivos tipos.
         row1, row2 = int(command["row1"]), (int(command["row2"]) if command["row2"] else None)
-        scalar = float(command["scalar"]) if command["scalar"] else 1
+        scalar = self.__convert_to_numeric_type(command["scalar"]) if command["scalar"] else 1
 
         # Troca a posição de duas linhas.
         if command["operator"] == "<>":
@@ -178,7 +182,7 @@ class Application(object):
             if command["y"].isalpha() and not command["y"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe!".format(command["y"]))
 
             x = self.__matrices[command["x"]]
-            y = self.__matrices[command["y"]] if command["y"].isalpha() else float(command["y"])
+            y = self.__matrices[command["y"]] if command["y"].isalpha() else self.__convert_to_numeric_type(command["y"])
 
             if command["operator"] == "/":
                 if isinstance(y, Matrix): raise ValueError("Não é possível dividir uma matriz por outra!")
