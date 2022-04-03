@@ -4,7 +4,7 @@ Essa é uma aplicação, em Python 3, para realizar operações de matrizes. Atr
 
 Para operações de linhas de matrizes, a instrução deve ser iniciada com um **L maiúsculo**, seguida da posição da linha (valor inteiro) na matriz, no qual será manipulada. Já em operações aritméticas com elementos de matrizes, os elementos devem ser escritos com um **E maiúsculo**, seguidos da sua posição (linha, coluna) separados por uma vírgula.
 
-Aviso: Na documentação, os nomes de matrizes possuirão o caracter underline (`_`) apenas para facilitar a visualização dos mesmos. No entanto, isso não é permitido na aplicação. Somente letras maiúsculas!
+Aviso: Na documentação, os nomes de matrizes possuirão o caractere underline (`_`) apenas para facilitar a visualização dos mesmos. No entanto, isso não é permitido na aplicação. Somente letras maiúsculas!
 
 # Arquivo de Matrizes:
 
