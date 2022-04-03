@@ -4,6 +4,8 @@ Essa é uma aplicação, em Python 3, para realizar operações de matrizes. Atr
 
 Para operações de linhas de matrizes, a instrução deve ser iniciada com um **L maiúsculo**, seguida da posição da linha (valor inteiro) na matriz, no qual será manipulada. Já em operações aritméticas com elementos de matrizes, os elementos devem ser escritos com um **E maiúsculo**, seguidos da sua posição (linha, coluna) separados por uma vírgula.
 
+Aviso: Na documentação, os nomes de matrizes possuirão o caracter underline (`_`) apenas para facilitar a visualização dos mesmos. No entanto, isso não é permitido na aplicação. Somente letras maiúsculas!
+
 # Arquivo de Matrizes:
 
 O arquivo de matrizes pode estar em qualquer extensão, contendo quantas matrizes desejar, desde que esteja no seguinte formato:
@@ -49,9 +51,9 @@ MATRIZ_A = MATRIZ_B c           // Conjugada
 
 MATRIZ_A = MATRIZ_B t           // Transposta
   
-MATRIZ_A = MATRIZ_B ct          // Conjugada e Transposta
+MATRIZ_A = MATRIZ_B ct          // Conjugada e Transposta (equivalente à "tc")
 
-MATRIZ_A = MATRIZ_B tc          // Transposta e Conjugada
+MATRIZ_A = MATRIZ_B tc          // Transposta e Conjugada (equivalente à "ct")
 ```
   
 # Operações de Linhas de Matrizes:
