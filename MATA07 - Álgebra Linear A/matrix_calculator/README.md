@@ -55,7 +55,10 @@ MATRIZ_A = MATRIZ_B ct          // Conjugada e Transposta (equivalente à "tc")
 
 MATRIZ_A = MATRIZ_B tc          // Transposta e Conjugada (equivalente à "ct")
 ```
-  
+ 
+**OBSERVAÇÃO:** O escalar, nessa e em todas as outras operações, podem ser complexos. No entanto, diferentemente dos valores complexos
+salvos no arquivo de matrizes, aqui ele deve obrigatoriamente estar dentro de parênteses. Exemplo: `(-3+4i) (-i) (-5.7i) (i) (4.2-9.3i)`.
+ 
 # Operações de Linhas de Matrizes:
   
 ```
@@ -79,5 +82,5 @@ você não pode atribuir valores à matriz. Apenas utilizá-las para realizar c�
 Veja o exemplo abaixo, em que todos os possíveis operadores aritméticos são utilizados:
 
 ```
-5 * (E1,2 + 17.5 - E4,9) - (E5,5 ** 3) / 2 + E13,5 % 2
+5 * (E1,2 + 17.5 - E4,9) - (E5,5 ** 3) / 2 + E13,5 % 2 - E7,5 * ((3-i) - (i))
 ```
