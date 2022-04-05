@@ -98,7 +98,7 @@ class Matrix(object):
 
         # Verifica se o valor é um número e o insere na posição especificada.
         if not self.__is_number(value): raise TypeError("Value must be a number (int, float or complex), not '{}'".format(type(value).__name__))
-        self.__matrix[row][column] = value
+        self.__matrix[row][column] = int(value) if not isinstance(value, complex) and int(value) == value else value
 
     def __iter__(self):
         self.__iteration_index = 0
