@@ -440,11 +440,31 @@ class Matrix(object):
         """
         return self.__check_triangular(lower = True)
 
+    def is_normal(self):
+        """
+        Verifica se a matriz é uma matriz normal.
+        """
+        if not self.is_square(): return False
+        
+        ct_matrix = self.conjugate_transpose()
+        return ct_matrix * self == self * ct_matrix
+
     def is_null(self):
         """
         Verifica se a matriz é uma matriz nula.
         """
         return self.__non_zero_values == 0
+
+    def is_orthogonal(self):
+        """
+        Verifica se a matriz é uma matriz ortogonal.
+        """
+        if not self.is_square(): return False
+        
+        t_matrix = self.transpose()
+        result = t_matrix * self
+        
+        return (result == self * t_matrix) and result.is_identity()
 
     def is_row(self):
         """
