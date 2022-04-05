@@ -116,6 +116,12 @@ class Application(object):
         row1, row2 = int(command["row1"]), (int(command["row2"]) if command["row2"] else None)
         scalar = self.__convert_to_numeric_type(command["scalar"]) if command["scalar"] else 1
 
+        # Verifica se o escalar é zero, pois, não é possível dividir um número por zero
+        # e multiplicação de linha por zero não é uma operação elementar.
+        if scalar == 0:
+            if command["operator"] == "/=": raise ValueError("Não é possível dividir um número por zero!")
+            else: raise ValueError("Multiplicar uma linha por zero não é uma operação elementar!")
+
         # Troca a posição de duas linhas.
         if command["operator"] == "<>":
             if not row2: raise SyntaxError("Informe a linha que deseja trocar.")
@@ -125,7 +131,7 @@ class Application(object):
         # Verifica se as linhas são iguais.
         elif command["operator"] == "==":
             if not row2: raise SyntaxError("Informe a linha que deseja verificar a igualdade.")
-            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar!")
+            if command["scalar"]: raise SyntaxError("Não é possível realizar essa operação com um escalar.")
             input(matrix.get_row(row1) == matrix.get_row(row2))
             
         # Soma, ou subtrai, uma linha por outra linha.
