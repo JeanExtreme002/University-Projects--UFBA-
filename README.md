@@ -1,7 +1,7 @@
 ## :nerd_face: Sobre:
 Esse é um repositório pessoal, criado para armazenar projetos de minha autoria, alguns com a colaboração de colegas (sempre deixo os créditos), durante a minha vida universitária na UFBA (Universidade Federal da Bahia).
 <br/><br/>
-O repositório está organizado em disciplinas, pois cada projeto terá um tema respectivo à uma disciplina. Atualizarei esse
+O repositório está organizado em disciplinas, pois cada projeto terá um tema, respectivo à uma disciplina. Atualizarei esse
 repositório sempre que eu tiver um novo projeto, conforme meu progresso no curso. Sinta-se à vontade para estudar e utilizar os códigos :)
 
 ## :star: Melhores Projetos:
