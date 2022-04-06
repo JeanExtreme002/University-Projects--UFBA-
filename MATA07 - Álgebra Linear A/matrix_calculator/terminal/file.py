@@ -1,6 +1,18 @@
 from .parser import parse_complex_value
 
+def load_instructions(filename):
+    """
+    Função geradora para retornar instruções de um arquivo.
+    """
+    with open(filename) as file:
+        for instruction in file:
+            yield instruction.replace("\n", "").strip()
+
 def load_matrices(filename, convert_to):
+    """
+    Função para abrir um arquivo de matrizes e retorná-las em um dicionário {nome: matriz, ...}.
+    As matrizes do arquivo devem estar no formato NOME linha,coluna: valor1, valor2, ...
+    """
     matrices = dict()
     
     with open(filename) as file:
@@ -31,6 +43,10 @@ def load_matrices(filename, convert_to):
     return matrices
 
 def save_matrices(filename, matrices):
+    """
+    Função para salvar um dicionário de matrizes em um arquivo. O dicionário
+    deve estar no formato {nome: matriz}.
+    """
     with open(filename, "w") as file:
 
         # Percorre o dicionário de matrizes, salvando uma matriz em cada linha.

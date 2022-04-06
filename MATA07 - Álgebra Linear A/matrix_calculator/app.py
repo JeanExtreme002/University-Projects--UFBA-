@@ -14,71 +14,79 @@ class Application(object):
     def __convert_to_numeric_type(self, string):
         return parser.parse_complex_value(string) if "(" in string else float(string)
 
+    def __delete_matrix(self, name):
+        self.__matrices.pop(name)
+
+        # Verifica se a matriz deletada era a que estava em uso.
+        if name == self.__current_matrix_name:
+            self.__current_matrix_name = None
+
+    def __execute_instructions(self, filename):
+        line_counter = 0
+        
+        for instruction in file.load_instructions(filename):
+            line_counter += 1
+            
+            if not instruction: continue
+
+            try:
+                self.execute(instruction.replace("\n", "").strip())
+            except Exception as error:
+                self.__wait_user("[Linha {}] ERRO: {}".format(line_counter, error))
+                break
+
+    def __load_matrices(self, filename):
+        try: self.__matrices.update(file.load_matrices(filename, convert_to = Matrix))
+        except FileNotFoundError: raise FileNotFoundError("Esse arquivo não existe.")
+            
+    def __set_application_config(self, name, value):
+        # O valor deve ser obrigatoriamente "true" ou "false".
+        if not value.lower() in ["true", "false"]: raise ValueError("Você deve informar a configuração! (true ou false)")
+        value = True if value.lower() == "true" else False
+
+        if name == "show": self.__show_matrix = value
+        elif name == "log": self.__show_old_commands = value
+
+    def __set_current_matrix(self, name):
+        if not name in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(name))
+        self.__current_matrix_name = name
+
+    def __wait_user(self, message):
+        input((message if message else "") + " (Pressione ENTER)")
+            
     def __execute_application_operation(self, command):
         # Carrega as matrizes de um arquivo.
-        if command["command"] == "load":
-            try: self.__matrices.update(file.load_matrices(command["args"], convert_to = Matrix))
-            except FileNotFoundError: raise FileNotFoundError("Esse arquivo não existe.")
+        if command["command"] == "load": self.__load_matrices(command["args"])
 
         # Salva as matrizes em um arquivo.
-        elif command["command"] == "save":
-            file.save_matrices(command["args"], self.__matrices)
+        elif command["command"] == "save": file.save_matrices(command["args"], self.__matrices)
 
         # Deleta uma matriz do dicionário de matrizes.
-        elif command["command"] == "delete":
-            self.__matrices.pop(command["args"])
+        elif command["command"] == "delete": self.__delete_matrix(command["args"])
 
-            # Verifica se a matriz deletada era a que estava em uso.
-            if command["args"] == self.__current_matrix_name:
-                self.__current_matrix_name = None
+        # Carrega instruções de um arquivo e as executa.
+        elif command["command"] == "execute": self.__execute_instructions(command["args"])
 
         # Altera a configuração de imprimir a matriz na tela.
-        elif command["command"] == "show":
-            if not command["args"].lower() in ["true", "false"]: raise ValueError("Você deve informar a configuração! (true ou false)")
-            self.__show_matrix = True if command["args"].lower() == "true" else False
+        elif command["command"] == "show": self.__set_application_config("show", command["args"])
 
         # Altera a configuração de salvar as instruções.
-        elif command["command"] == "log":
-            if not command["args"].lower() in ["true", "false"]: raise ValueError("Você deve informar a configuração! (true ou false)")
-            self.__show_old_commands = True if command["args"].lower() == "true" else False            
+        elif command["command"] == "log": self.__set_application_config("log", command["args"])          
             
         # Imprime uma lista com todas as matrizes disponíveis.
-        elif command["command"] == "list":
-            self.print_matrices()
-            input()
+        elif command["command"] == "list": self.__wait_user(self.print_matrices())
 
         # Imprime uma lista com todas as propriedades da matriz atual.
-        elif command["command"] == "prop":
-            self.print_matrix_properties(command["args"])
-            input()
+        elif command["command"] == "prop": self.__wait_user(self.print_matrix_properties(command["args"]))
 
         # Define uma matriz a ser usada nas operações elementares.
-        elif command["command"] == "use":
-
-            # Verifica se a matriz existe.
-            if not command["args"] in self.__matrices:
-                raise KeyError("A matriz \"{}\" não existe.".format(command["args"]))
-            
-            self.__current_matrix_name = command["args"]
+        elif command["command"] == "use": self.__set_current_matrix(command["args"])
 
         # Imprime uma lista de comando do terminal.
-        elif command["command"] == "help":
-            print("Lista de Comandos do Terminal:")
-            print("{:<22} | Deleta uma matriz".format("- delete <matrix>"))
-            print("{:<22} | Encerra o programa".format("- exit"))
-            print("{:<22} | Mostra uma lista com todos os comandos do terminal".format("- help"))
-            print("{:<22} | Mostra uma lista com todas as matrizes".format("- list"))
-            print("{:<22} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
-            print("{:<22} | Mostra os comandos anteriores".format("- log <true | false>"))
-            print("{:<22} | Mostra uma lista com todas as propriedades da matriz".format("- prop <matrix>"))
-            print("{:<22} | Salva as matrizes em um arquivo".format("- save <arquivo.ext>"))
-            print("{:<22} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
-            print("{:<22} | Define uma matriz para ser utilizada".format("- use <matrix>"))
-            input()
+        elif command["command"] == "help": self.print_command_list()
 
         # Encerra a aplicação.
-        elif command["command"] == "exit":
-            self.stop()
+        elif command["command"] == "exit": self.stop()
 
         # Caso nenhuma condição acima seja atendida, o comando não existe.
         else: raise ValueError("Esse comando não existe.")
@@ -199,14 +207,6 @@ class Application(object):
                 else: self.__matrices[command["var"]] = x / y
             except: raise ValueError("O número de colunas da matriz à esquerda deve ser o número de linhas da matriz à direita!")
 
-    def __get_user_input(self):
-        """
-        Obtém o input do usuário.
-        """
-        command = input("Command> ").strip()
-        print()
-        return command
-    
     def clear_terminal(self):
         """
         Limpa a tela do terminal.
@@ -221,12 +221,21 @@ class Application(object):
         self.__command_log.append(command)
         command = parser.parse_command(command)
         
-        return {
+        options = {
             "application": self.__execute_application_operation,
             "matrix": self.__execute_matrix_operation,
             "elementary": self.__execute_elementary_operation,
             "arithmetic": self.__execute_arithmetic_operation
-        }[command["operation"]](command)
+        }
+        return options[command["operation"]](command)
+
+    def get_user_input(self):
+        """
+        Obtém o input do usuário.
+        """
+        command = input("Command> ").strip()
+        print()
+        return command
         
     def print_current_matrix(self):
         """
@@ -249,6 +258,24 @@ class Application(object):
             ))
         print("\n")
 
+    def print_command_list(self):
+        """
+        Imprime uma lista com todos os comandos do terminal.
+        """
+        print("Lista de Comandos do Terminal:")
+        print("{:<23} | Deleta uma matriz".format("- delete <matrix>"))
+        print("{:<23} | Carrega um arquivo de instruções e as executa".format("- execute <arquivo.ext>"))
+        print("{:<23} | Encerra o programa".format("- exit"))
+        print("{:<23} | Mostra uma lista com todos os comandos do terminal".format("- help"))
+        print("{:<23} | Mostra uma lista com todas as matrizes".format("- list"))
+        print("{:<23} | Carrega um arquivo contendo matrizes".format("- load <arquivo.ext>"))
+        print("{:<23} | Mostra os comandos anteriores".format("- log <true | false>"))
+        print("{:<23} | Mostra uma lista com todas as propriedades da matriz".format("- prop <matrix>"))
+        print("{:<23} | Salva as matrizes em um arquivo".format("- save <arquivo.ext>"))
+        print("{:<23} | Mostra a matriz que está sendo utilizada".format("- show <true | false>"))
+        print("{:<23} | Define uma matriz para ser utilizada".format("- use <matrix>"))
+        input()
+
     def print_matrix_properties(self, name):
         """
         Imprime as propriedades da matriz.
@@ -261,7 +288,7 @@ class Application(object):
         print("- Anti-simétrica:", matrix.is_skew_symmetric())
         print("- Coluna:", matrix.is_column())
         print("- Complexa:", matrix.is_complex())
-        print("- Determinante:", str(matrix.get_determinant()).replace("(","").replace(")","").replace("j","") if matrix.is_square() else "N/D")
+        print("- Determinante:", str(matrix.get_determinant()).replace("(","").replace(")","").replace("j","i") if matrix.is_square() else "N/D")
         print("- Diagonal:", matrix.is_diagonal())
         print("- Escalar:", matrix.is_scalar())
         print("- Identidade:", matrix.is_identity())
@@ -272,7 +299,7 @@ class Application(object):
         print("- Ortogonal:", matrix.is_orthogonal())
         print("- Quadrada:", matrix.is_square())
         print("- Simétrica:", matrix.is_symmetric())
-        print("- Traço:", str(matrix.get_trace()).replace("(","").replace(")","").replace("j","") if matrix.is_square() else "N/D")
+        print("- Traço:", str(matrix.get_trace()).replace("(","").replace(")","").replace("j","i") if matrix.is_square() else "N/D")
         print("- Triangular Inferior:", matrix.is_lower_triangular())
         print("- Triangular Superior:", matrix.is_upper_triangular())
         
@@ -307,8 +334,8 @@ class Application(object):
                 self.print_old_commands()
             
             # Executa a instrução do usuário.
-            try: self.execute(self.__get_user_input())
-            except Exception as error: input("ERRO: " + str(error))
+            try: self.execute(self.get_user_input())
+            except Exception as error: self.__wait_user("ERRO: {}".format(error))
 
     def stop(self):
         """
