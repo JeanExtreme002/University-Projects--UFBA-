@@ -7,4 +7,5 @@ repositório sempre que eu tiver um novo projeto, conforme meu progresso no curs
 - [MATA07 - Álgebra Linear A](./MATA07%20-%20Álgebra%20Linear%20A)
 - [MATA37 - Introdução à Lógica de Programação](./MATA37%20-%20Introdu%C3%A7%C3%A3o%20%C3%A0%20L%C3%B3gica%20de%20Programa%C3%A7%C3%A3o)
 - [MATA38 - Projetos de Circuitos Lógicos](./MATA38%20-%20Projetos%20de%20Circuitos%20L%C3%B3gicos)
+- [MATA40 - Estrutura de Dados e Algoritmos I](./MATA40%20-%20Estrutura%20de%20Dados%20e%20Algoritmos%20I)
 - [MATA42 - Matemática Discreta I](./MATA42%20-%20Matem%C3%A1tica%20Discreta%20I)
