@@ -24,6 +24,7 @@ MATRIZB 7,8: -4i, 5.7, 120, -7, -i, 0, 55, -1-i, 9999
 | Comando                    | Descrição                                            |
 | -------------------------- | ---------------------------------------------------- |
 | delete \<matrix\>          | Deleta uma matriz                                    |
+| execute \<arquivo.ext\>    | Carrega um arquivo de instruções e as executa        | 
 | exit                       | Encerra o programa                                   |
 | help                       | Mostra uma lista com todos os comandos do terminal   |
 | list                       | Mostra uma lista com todas as matrizes               |
