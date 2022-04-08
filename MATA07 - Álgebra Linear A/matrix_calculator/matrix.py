@@ -347,6 +347,11 @@ class Matrix(object):
         """
         Obtém o menor complementar da matriz, removendo a linha e coluna especificada (linha >= 1, coluna >= 1).
         """
+
+        # A menor matriz possível para realizar essa operação é a de ordem 2x2.
+        if self.__rows < 2 or self.__columns < 2:
+            raise MatrixOrderError("'{}x{}' matrix does not have a minor".format(*self.get_order()))
+        
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         new_matrix = Matrix(self.__rows - 1, self.__columns - 1)
 

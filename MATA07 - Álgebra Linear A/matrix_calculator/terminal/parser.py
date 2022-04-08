@@ -6,11 +6,12 @@ float_pattern = "-?[0-9]+\.[0-9]+"
 complex_pattern = "\((?:{0}|{1})?[\+-]?(?:{2}|{3})?i\)".format(float_pattern, integer_pattern, float_pattern[2:], integer_pattern[2:])
 numeric_pattern = "{0}|{1}|{2}".format(complex_pattern, float_pattern, integer_pattern)
 matrix_element_pattern = "E[0-9]+,[0-9]+"
+matrix_minor_pattern = "M[0-9]+,[0-9]"
 
 # Patterns para comandos de usuário.
 application_operation_pattern = "^([a-z]+)(\s.+|)"
 elementary_operation_pattern = "^L([0-9])(\+=|\-=|\*=|/=|<>|==)({0}|)L?([0-9]+|)$".format(numeric_pattern)
-matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|{0})(\+|-|\*|/|tc|ct|c|t)([A-Z]+|{0}|)$".format(numeric_pattern)
+matrix_operation_pattern = "^([A-Z]+)=([A-Z]+|{0})(\+|-|\*|/|tc|ct|c|t|{1})([A-Z]+|{0}|)$".format(numeric_pattern, matrix_minor_pattern)
 
 def parse_command(command):
     # Verifica se o comando refere-se à um comando da aplicação. 

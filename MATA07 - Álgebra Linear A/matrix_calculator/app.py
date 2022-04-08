@@ -167,8 +167,19 @@ class Application(object):
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
             self.__matrices[command["var"]] = self.__matrices[command["x"]].transpose()
 
+        # Obtém o menor complementar da matriz.
+        if command["operator"].startswith("M"):
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
+            if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
+
+            row, column = command["operator"][1:].split(",")
+
+            # Obtém e atribui à variável o menor complementar da matriz.
+            try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_minor(int(row), int(column))
+            except: raise IndexError("Matrizes '{}x{}' não possuem menor complementar.".format(*self.__matrices[command["x"]].get_order()))
+        
         # Soma ou subtrai as matrizes.
-        if command["operator"] in "+-":
+        elif command["operator"] in "+-":
 
             # Verifica se existem duas matrizes.
             if not command["x"].isalpha() or not command["y"].isalpha():
@@ -198,10 +209,12 @@ class Application(object):
             x = self.__matrices[command["x"]]
             y = self.__matrices[command["y"]] if command["y"].isalpha() else self.__convert_to_numeric_type(command["y"])
 
+            # Divide a matriz por um escalar.
             if command["operator"] == "/":
                 if isinstance(y, Matrix): raise ValueError("Não é possível dividir uma matriz por outra!")
                 if y == 0: raise ValueError("Não é possível dividir por zero!")
-                
+
+            # Faz o produto das matrizes.
             try:
                 if command["operator"] == "*": self.__matrices[command["var"]] = x * y
                 else: self.__matrices[command["var"]] = x / y
