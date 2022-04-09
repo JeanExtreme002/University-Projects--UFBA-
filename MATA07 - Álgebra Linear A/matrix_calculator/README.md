@@ -60,6 +60,8 @@ MATRIZ_A = MATRIZ_B adj         // Matriz adjunta
 
 MATRIZ_A = MATRIZ_B cof         // Matriz cofatora
 
+MATRIZ_A = MATRIZ_B inv         // Matriz inversa
+
 MATRIZ_A = MATRIZ_B m(r, c)     // Menor complementar da matriz a partir de (linha, coluna)
 ```
  
