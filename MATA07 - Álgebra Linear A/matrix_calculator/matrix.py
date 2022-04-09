@@ -321,6 +321,8 @@ class Matrix(object):
         """
         Retorna o cofator de uma dada posição (linha, coluna) da matriz.
         """
+        if self.__rows == 1 and self.__columns == 1: return 1
+        
         determinant = self.get_matrix_minor(row, column).get_determinant()
         return (determinant * -1) if (row + column) % 2 != 0 else determinant
 
@@ -348,6 +350,9 @@ class Matrix(object):
         """
         if not self.is_square():
             raise MatrixOrderError("Matrix must be a square matrix")
+
+        # O determinante de uma matriz de ordem 0 é 1.
+        if self.__rows == 0: return 1
 
         # O determinante de uma matriz de ordem 1 é o próprio valor.
         if self.__rows == 1:

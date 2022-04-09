@@ -156,19 +156,29 @@ class Application(object):
             
     def __execute_matrix_operation(self, command):
         # Obtém a matriz conjugada.
-        if "c" in command["operator"]:
+        if command["operator"] in ["c", "ct", "tc"]:
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
             self.__matrices[command["var"]] = self.__matrices[command["x"]].conjugate()
 
         # Obtém a matriz transposta.
-        if "t" in command["operator"]:
+        if command["operator"] in ["t", "ct", "tc"]:
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
             self.__matrices[command["var"]] = self.__matrices[command["x"]].transpose()
+            
+        # Obtém a matriz adjunta ou cofatora.
+        if command["operator"] in ["adj", "cof"]:
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
+            if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
+            
+            try:
+                if command["operator"] == "adj": self.__matrices[command["var"]] = self.__matrices[command["x"]].get_adjugate_matrix()
+                if command["operator"] == "cof": self.__matrices[command["var"]] = self.__matrices[command["x"]].get_cofactor_matrix()
+            except: raise IndexError("Não é possível realizar essa operação em uma matriz '{}x{}'".format(*self.__matrices[command["x"]].get_order()))
 
         # Obtém o menor complementar da matriz.
-        if command["operator"].startswith("m"):
+        elif command["operator"].startswith("m"):
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
 
@@ -177,7 +187,7 @@ class Application(object):
             # Obtém e atribui à variável o menor complementar da matriz.
             try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_matrix_minor(int(row), int(column))
             except: raise IndexError("Matrizes '{}x{}' não possuem menor complementar.".format(*self.__matrices[command["x"]].get_order()))
-        
+
         # Soma ou subtrai as matrizes.
         elif command["operator"] in "+-":
 

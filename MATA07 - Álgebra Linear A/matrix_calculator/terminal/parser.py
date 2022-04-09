@@ -10,7 +10,7 @@ numeric_pattern = "{0}|{1}|{2}".format(complex_pattern, float_pattern, integer_p
 elementary_operators_pattern = "\+=|\-=|\*=|/=|<>|=="
 matrix_element_pattern = "E[0-9]+,[0-9]+"
 matrix_minor_pattern = "m\([0-9]+,[0-9]\)"
-matrix_operators_pattern = "\+|-|\*|/|tc|ct|c|t|{0}".format(matrix_minor_pattern)
+matrix_operators_pattern = "\+|-|\*|/|tc|ct|c|t|adj|cof|{0}".format(matrix_minor_pattern)
 
 # Patterns de expressões (comandos) de usuário.
 application_operation_pattern = "^([a-z]+)(\s.+|)"
