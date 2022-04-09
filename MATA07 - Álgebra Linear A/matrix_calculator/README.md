@@ -56,7 +56,7 @@ MATRIZ_A = MATRIZ_B ct          // Conjugada e Transposta (equivalente à "tc")
 
 MATRIZ_A = MATRIZ_B tc          // Transposta e Conjugada (equivalente à "ct")
 
-MATRIZ_A = MATRIZ_B m(r, c)     // Menor complementar a partir de (linha, coluna)
+MATRIZ_A = MATRIZ_B m(r, c)     // Menor complementar da matriz a partir de (linha, coluna)
 ```
  
 **OBSERVAÇÃO:** O escalar, nessa e em todas as outras operações, podem ser complexos. No entanto, diferentemente dos valores complexos
