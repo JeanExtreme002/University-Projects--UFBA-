@@ -56,6 +56,10 @@ MATRIZ_A = MATRIZ_B ct          // Conjugada e Transposta (equivalente à "tc")
 
 MATRIZ_A = MATRIZ_B tc          // Transposta e Conjugada (equivalente à "ct")
 
+MATRIZ_A = MATRIZ_B adj         // Matriz adjunta
+
+MATRIZ_A = MATRIZ_B cof         // Matriz cofatora
+
 MATRIZ_A = MATRIZ_B m(r, c)     // Menor complementar da matriz a partir de (linha, coluna)
 ```
  
