@@ -1,6 +1,10 @@
 class MatrixOrderError(Exception):
     pass
 
+class NonInvertibleMatrixError(Exception):
+    pass
+
+
 class Matrix(object):
     
     def __init__(self, rows, columns, iterable = []):
@@ -343,7 +347,7 @@ class Matrix(object):
         Retorna o determinante da matriz.
         """
         if not self.is_square():
-            raise MatrixOrderError("Must be a square matrix")
+            raise MatrixOrderError("Matrix must be a square matrix")
 
         # O determinante de uma matriz de ordem 1 é o próprio valor.
         if self.__rows == 1:
@@ -386,6 +390,16 @@ class Matrix(object):
                 index += 1
                 
         return new_matrix
+
+    def get_matrix_inverse(self):
+        """
+        Retorna a matriz inversa.
+        """
+        determinant = self.get_determinant()
+
+        # Retorna a matriz se o determinante for diferente de zero.
+        if determinant == 0: raise NonInvertibleMatrixError("Matrix is not invertible because its determinant is zero")
+        return self.get_adjugate_matrix() / determinant
 
     def get_order(self):
         """
