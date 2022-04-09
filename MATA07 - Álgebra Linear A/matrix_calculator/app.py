@@ -177,6 +177,14 @@ class Application(object):
                 if command["operator"] == "cof": self.__matrices[command["var"]] = self.__matrices[command["x"]].get_cofactor_matrix()
             except: raise IndexError("Não é possível realizar essa operação em uma matriz '{}x{}'".format(*self.__matrices[command["x"]].get_order()))
 
+        # Obtém a inversa da matriz.
+        if command["operator"] == "inv":
+            if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
+            if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
+
+            try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_matrix_inverse()
+            except: raise Exception("Essa matriz não é inversível.")
+
         # Obtém o menor complementar da matriz.
         elif command["operator"].startswith("m"):
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
