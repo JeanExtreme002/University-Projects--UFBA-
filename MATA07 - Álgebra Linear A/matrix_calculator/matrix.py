@@ -266,7 +266,7 @@ class Matrix(object):
         # Retorna a posição em forma de índice comum (indo de zero à N). 
         return position - 1
 
-    def add(self, matrix, *, sub = True):
+    def add(self, matrix, *, sub = False):
         """
         Retorna uma matriz resultante da soma, ou subtração (sub = True), de matrizes.
         """
@@ -287,7 +287,7 @@ class Matrix(object):
         for column in range(self.__columns):
            if div: self[row1: column] += self[row2: column] / scalar
            else: self[row1: column] += self[row2: column] * scalar
-      
+
     def conjugate(self):
         """
         Retorna a matriz conjugada.
@@ -300,27 +300,48 @@ class Matrix(object):
         """
         return self.__conjugate_transpose()
 
-    def div(self, value):
-        """
-        Retorna uma matriz resultante da divisão da matriz por um escalar.
-        """
-        return self / value
-
     def get(self, row, column):
         """
-        Obtém um elemento na posição (linha >= 1, coluna >= 1).
+        Retorna o elemento em uma dada posição (linha, coluna).
         """
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         return self[row: column]
 
+    def get_adjugate_matrix(self):
+        """
+        Retorna a matriz adjunta.
+        """
+        return self.get_cofactor_matrix().transpose()
+
+    def get_cofactor(self, row, column):
+        """
+        Retorna o cofator de uma dada posição (linha, coluna) da matriz.
+        """
+        determinant = self.get_matrix_minor(row, column).get_determinant()
+        return (determinant * -1) if (row + column) % 2 != 0 else determinant
+
+    def get_cofactor_matrix(self):
+        """
+        Retorna a matriz cofatora.
+        """
+        new_matrix = Matrix(*self.get_order())
+        
+        for row in range(self.__rows):
+            for column in range(self.__columns):
+                new_matrix[row: column] = self.get_cofactor(row + 1, column + 1)
+        return new_matrix
+
     def get_column(self, column):
         """
-        Obtém toda a coluna da matriz em uma determinada posição.
+        Retorna toda a coluna da matriz em uma determinada posição (coluna).
         """
         column = self.__verify_position(column, row = False)
         return [self[row: column] for row in range(self.__rows)]
 
     def get_determinant(self):
+        """
+        Retorna o determinante da matriz.
+        """
         if not self.is_square():
             raise MatrixOrderError("Must be a square matrix")
 
@@ -335,17 +356,16 @@ class Matrix(object):
 
         determinant = 0
 
-        # Calcula o determinante recursivamente, multiplicando os elementos da
-        # primeira linha pelos seus cofatores e os somando.
+        # Calcula o determinante multiplicando os elementos da primeira
+        # linha pelos seus cofatores e os somando.
         for column in range(self.__columns):
-            cofactor = (-1 if column % 2 != 0 else 1) * self.get_minor(1, column + 1).get_determinant()
-            determinant += self[0: column] * cofactor
+            determinant += self[0: column] * self.get_cofactor(1, column + 1)
             
         return determinant if determinant != 0 else 0
 
-    def get_minor(self, row, column):
+    def get_matrix_minor(self, row, column):
         """
-        Obtém o menor complementar da matriz, removendo a linha e coluna especificada (linha >= 1, coluna >= 1).
+        Retorna o menor complementar da matriz, removendo a linha e coluna especificada.
         """
 
         # A menor matriz possível para realizar essa operação é a de ordem 2x2.
@@ -375,7 +395,7 @@ class Matrix(object):
 
     def get_row(self, row):
         """
-        Obtém toda a linha da matriz em uma determinada posição.
+        Retorna toda a linha da matriz em uma determinada posição (linha).
         """
         row = self.__verify_position(row)
         return self.__matrix[row].copy()
@@ -513,11 +533,12 @@ class Matrix(object):
         """
         return self.__check_triangular(lower = False)
 
-    def multiply(self, value):
+    def multiply(self, value, *, div = False):
         """
-        Retorna uma matriz resultante do produto da matriz por um escalar ou por outra matriz.
+        Retorna uma matriz resultante do produto da matriz por um escalar ou por outra matriz,
+        ou da divisão (div = True) da matriz por um escalar.
         """
-        return self * value
+        return (self / value) if div else (self * value)
 
     def multiply_row(self, row, value, *, div = False):
         """
@@ -532,14 +553,14 @@ class Matrix(object):
 
     def set(self, row, column, value):
         """
-        Insere um elemento na posição (linha >= 1, coluna >= 1).
+        Insere um elemento em uma dada posição (linha, coluna).
         """
         row, column = self.__verify_position(row), self.__verify_position(column, row = False)
         self[row: column] = value
 
     def set_column(self, column, iterable):
         """
-        Define uma coluna em uma determinada posição da matriz.
+        Define uma coluna em uma determinada posição (coluna) da matriz.
         """
         column = self.__verify_position(column, row = False)
 
@@ -553,7 +574,7 @@ class Matrix(object):
 
     def set_row(self, row, iterable):
         """
-        Define uma linha em uma determinada posição da matriz.
+        Define uma linha em uma determinada posição (linha) da matriz.
         """
         row = self.__verify_position(row)
 

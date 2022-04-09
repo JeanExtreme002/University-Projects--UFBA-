@@ -175,7 +175,7 @@ class Application(object):
             row, column = command["operator"][1:].split(",")
 
             # Obtém e atribui à variável o menor complementar da matriz.
-            try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_minor(int(row), int(column))
+            try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_matrix_minor(int(row), int(column))
             except: raise IndexError("Matrizes '{}x{}' não possuem menor complementar.".format(*self.__matrices[command["x"]].get_order()))
         
         # Soma ou subtrai as matrizes.
