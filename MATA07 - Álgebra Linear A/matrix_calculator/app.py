@@ -168,11 +168,11 @@ class Application(object):
             self.__matrices[command["var"]] = self.__matrices[command["x"]].transpose()
 
         # Obtém o menor complementar da matriz.
-        if command["operator"].startswith("M"):
+        if command["operator"].startswith("m"):
             if not command["x"] in self.__matrices: raise KeyError("A matriz \"{}\" não existe.".format(command["x"]))
             if command["y"]: raise SyntaxError("Por qual motivo o \"{}\" está presente?".format(command["y"]))
 
-            row, column = command["operator"][1:].split(",")
+            row, column = command["operator"][1:].replace("(","").replace(")", "").split(",")
 
             # Obtém e atribui à variável o menor complementar da matriz.
             try: self.__matrices[command["var"]] = self.__matrices[command["x"]].get_matrix_minor(int(row), int(column))
