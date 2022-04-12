@@ -49,6 +49,9 @@ class Application(object):
         
         for instruction in load_instructions(filename):
             line_count += 1
+
+            # Se não houver instrução, o programa prossegue para a próxima.
+            if not instruction: continue
             
             instruction = self.__terminal.input(instruction)
             if not self.execute(instruction, line_count): break
