@@ -23,6 +23,9 @@ class Application(object):
     def __init__(self):
         self.__executor = Executor(self)
         self.__terminal = Terminal(self)
+
+    def clear_history(self):
+        self.__terminal.clear_history()
     
     def delete_matrix(self, matrix_name):
         if not matrix_name in self.__matrices: raise MatrixNotExistsError(matrix_name)

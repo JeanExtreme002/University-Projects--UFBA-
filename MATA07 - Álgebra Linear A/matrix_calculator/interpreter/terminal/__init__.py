@@ -21,7 +21,7 @@ class Terminal(object):
         elif string == "false": return False
         else: raise BooleanConfigError
 
-    def clear_instruction_log(self):
+    def clear_history(self):
         """
         Apaga o registro de todas as instruções antigas.
         """
@@ -103,4 +103,4 @@ class Terminal(object):
         self.print_matrix_in_use()
         
         if self.__config["show_old_instructions"]: self.print_old_instructions()
-        elif self.__on_session: self.print_instruction(self.__instruction_log[-1])
+        elif self.__on_session and self.__instruction_log: self.print_instruction(self.__instruction_log[-1])

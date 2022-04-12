@@ -1,6 +1,7 @@
 __all__ = ("commands", "help_string")
 
 commands = [
+    ("clear", "Apaga o histórico de instruções"),
     ("delete <matrix>", "Deleta uma matriz"),
     ("execute <arquivo.ext>", "Carrega um arquivo de instruções e as executa"),
     ("exit", "Encerra o programa"),

@@ -39,51 +39,57 @@ class ApplicationOperationExecutor(object):
         return string
 
     def execute(self, instruction: dict):
+        command = instruction["command"]
+        args = instruction["args"]
         
         # Carrega as matrizes de um arquivo.
-        if instruction["command"] == "load":
-            self.__core.load_matrices_from_file(instruction["args"])
+        if command == "load":
+            self.__core.load_matrices_from_file(args)
 
         # Salva as matrizes em um arquivo.
-        elif instruction["command"] == "save":
-            self.__core.save_matrices(instruction["args"])
+        elif command == "save":
+            self.__core.save_matrices(args)
 
         # Deleta uma matriz do dicionário de matrizes.
-        elif instruction["command"] == "delete":
-            self.__core.delete_matrix(instruction["args"])
+        elif command == "delete":
+            self.__core.delete_matrix(args)
 
         # Carrega instruções de um arquivo e as executa.
-        elif instruction["command"] == "execute":
-            self.__core.execute_instructions(instruction["args"])
+        elif command == "execute":
+            self.__core.execute_instructions(args)
 
         # Altera a configuração de imprimir a matriz na tela.
-        elif instruction["command"] == "show":
-            self.__core.set_config("show_matrix", instruction["args"])
+        elif command == "show":
+            self.__core.set_config("show_matrix", args)
 
         # Altera a configuração de salvar as instruções.
-        elif instruction["command"] == "log":
-            self.__core.set_config("show_old_instructions", instruction["args"])          
+        elif command == "log":
+            self.__core.set_config("show_old_instructions", args)          
             
         # Imprime uma lista com todas as matrizes disponíveis.
-        elif instruction["command"] == "list":
+        elif command == "list":
             return self.__get_matrix_list_string(self.__core.get_matrices())
 
         # Imprime uma lista com todas as propriedades da matriz atual.
-        elif instruction["command"] == "prop":
-            matrix = self.__core.get_matrix(instruction["args"])
+        elif command == "prop":
+            matrix = self.__core.get_matrix(args)
             return self.__get_matrix_properties_string(matrix)
 
         # Define uma matriz a ser usada nas operações elementares.
-        elif instruction["command"] == "use":
-            self.__core.use_matrix(instruction["args"])
+        elif command == "use":
+            self.__core.use_matrix(args)
 
         # Imprime uma lista de comando do terminal.
-        elif instruction["command"] == "help":
+        elif command == "help":
             return command_list_string
 
         # Encerra a aplicação.
-        elif instruction["command"] == "exit":
+        elif command == "exit":
             self.__core.stop()
 
+        # Apaga o histórico de instruções.
+        elif command == "clear":
+            self.__core.clear_history()
+
         # Caso nenhuma condição acima seja atendida, o comando não existe.
-        else: raise CommandNotExistsError(instruction["command"])
+        else: raise CommandNotExistsError(command)
