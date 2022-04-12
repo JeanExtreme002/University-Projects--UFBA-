@@ -1,3 +1,7 @@
+class NoFilenameError(Exception):
+    def __str__(self):
+        return "Informe o nome do arquivo."
+
 class UserFileDecodingError(Exception):
     def __str__(self):
         return "Não foi possível descriptografar o arquivo."

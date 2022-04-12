@@ -20,6 +20,10 @@ class ExpressionSyntaxError(Exception):
     def __str__(self):
         return "A sintaxe dessa expressão está incorreta."
 
+class IllegalExponentError(Exception):
+    def __str__(self):
+        return "O expoente deve ser um número inteiro."
+
 class IllegalRowError(Exception):
     def __str__(self):
         return "Não é possível realizar essa operação com uma linha."
@@ -59,8 +63,8 @@ class NoMatrixError(Exception):
         self.__left, self.__right = left, right
 
     def __str__(self):
-        if self.__left: direction = " à esquerda"
-        elif self.__right: direction = " à direita"
+        if self.__left: direction = " à esquerda do operador"
+        elif self.__right: direction = " à direita do operador"
         else: direction = ""
         
         return "Informe uma matriz{} para realizar essa operação.".format(direction)
@@ -72,6 +76,10 @@ class NoScalarError(Exception):
 class NoSecondRowError(Exception):
     def __str__(self):
         return "Informe a posição da segunda linha para realizar essa operação."
+
+class PowByMatrixError(Exception):
+    def __str__(self):
+        return "Não é possível utilizar uma matriz como expoente."
 
 class SameRowError(Exception):
     def __str__(self):

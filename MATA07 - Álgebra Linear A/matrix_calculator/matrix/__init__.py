@@ -129,6 +129,34 @@ class Matrix(object):
             if matrix[row: column] != element: return False
         return True
 
+    def __pow__(self, exponent):
+        if not isinstance(exponent, int): TypeError("Exponent must be an integer, not '{}'".format(type(value).__name__))
+        if not self.is_square(): raise MatrixOrderError("Must be a square matrix")
+
+        # Se o expoente for zero, será retornado uma matriz identidade.
+        if exponent == 0:
+            rows, columns = self.get_order()
+            identity_matrix = Matrix(*self.get_order())
+
+            for i in range(rows):
+                identity_matrix[i: i] = 1
+            return identity_matrix
+
+        # Se o expoente for menor que zero, a matriz a ser trabalhada será a inversa.
+        if exponent < 0:
+            matrix = self.get_matrix_inverse()
+            exponent *= -1
+        else: matrix = self
+
+        # Obtém uma nova matriz, na qual será multiplicada pela base.
+        new_matrix = Matrix(*matrix.get_order(), matrix.to_list())
+        
+        # Multiplica a matriz por ela mesma (N - 1) vezes.
+        for i in range(exponent - 1):
+            new_matrix *= matrix
+
+        return new_matrix
+
     def __add__(self, matrix, *, sub = False):
         # Verifica se o argumento é uma matriz.
         if not self.__is_matrix(matrix):
@@ -599,6 +627,12 @@ class Matrix(object):
         # Insere os valores do iterável em cada coluna, na linha especificada, da matriz.
         for column in range(self.__columns):
             self[row: column] = iterable[column]
+
+    def to_list(self):
+        """
+        Retorna uma lista com todos os valores da matriz.
+        """
+        return [value for row in self.__matrix for value in row]
 
     def transpose(self):
         """

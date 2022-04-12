@@ -33,7 +33,11 @@ class MatrixOperationExecutor(object):
         self.__set_matrix(variable, (matrix_x - matrix_y) if sub else (matrix_x + matrix_y))
     
     def __adjugate(self, variable, x, y):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+
+        # Verifica se existe uma matriz à esquerda e realiza a operação.
+        if not x.isalpha(): raise NoMatrixError(left = True)
         matrix = self.__get_matrix(x)
 
         # Essa operação só pode ser realizada com matrizes quadradas.
@@ -41,24 +45,42 @@ class MatrixOperationExecutor(object):
         self.__set_matrix(variable, matrix.get_adjugate_matrix())
 
     def __cofactor(self, variable, x, y):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+
+        # Verifica se existe uma matriz à esquerda e realiza a operação.
+        if not x.isalpha(): raise NoMatrixError(left = True)
         matrix = self.__get_matrix(x)
 
         # Essa operação só pode ser realizada com matrizes quadradas.
         if not matrix.is_square(): raise MatrixOrderError(matrix.get_order())
         self.__set_matrix(variable, matrix.get_cofactor_matrix())
         
-    def __conjugate(self, variable, x, y):    
+    def __conjugate(self, variable, x, y):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+        
+        # Verifica se existe uma matriz à esquerda e realiza a operação.
+        if not x.isalpha(): raise NoMatrixError(left = True)
         self.__set_matrix(variable, self.__get_matrix(x).conjugate())
 
     def __inverse(self, variable, x, y):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+
+        # Verifica se existe uma matriz à esquerda.
+        if not x.isalpha(): raise NoMatrixError(left = True)
+
+        # Tenta obter a inversa.
         try: self.__set_matrix(variable, self.__get_matrix(x).get_matrix_inverse())
         except: raise NonInvertibleMatrixError
 
     def __minor(self, variable, x, y, operator):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+
+        # Verifica se existe uma matriz à esquerda.
+        if not x.isalpha(): raise NoMatrixError(left = True)
         matrix = self.__get_matrix(x)
         
         # Essa operação só pode ser realizada com matrizes de ordem maior ou igual a 2x2.
@@ -69,9 +91,10 @@ class MatrixOperationExecutor(object):
         self.__set_matrix(variable, matrix.get_matrix_minor(row, column))
 
     def __mult(self, variable, x, y, div = False):
+        # Verifica se existe uma matriz à esquerda.
         if not x.isalpha(): raise NoMatrixError(left = True)
         matrix_x = self.__get_matrix(x)
-        
+
         if y.isalpha(): y = self.__get_matrix(y)
         else: y = self.__convert_to_number(y)
 
@@ -84,9 +107,29 @@ class MatrixOperationExecutor(object):
         elif div and y == 0: raise ZeroScalarDivisionError
 
         self.__set_matrix(variable, (matrix_x / y) if div else (matrix_x * y))
+
+    def __pow(self, variable, x, y):
+        # Verifica se existe uma matriz à esquerda e realiza a operação.
+        if not x.isalpha(): raise NoMatrixError(left = True)
+
+        # Verifica se Y é um valor numérico.
+        if y.isalpha(): raise PowByMatrixError
+        y = self.__convert_to_number(y)
+
+        # Verifica se o Y é um valor inteiro.
+        if isinstance(y, complex) or y != int(y): raise IllegalExponentError
+        y = int(y)
+
+        # Realiza a operação.
+        matrix = self.__get_matrix(x)
+        self.__set_matrix(variable, matrix ** y)
         
     def __transpose(self, variable, x, y):
+        # Nessa operação, não deve existir um valor Y.
         if y: raise InstructionSyntaxError
+
+        # Verifica se existe uma matriz à esquerda e realiza a operação.
+        if not x.isalpha(): raise NoMatrixError(left = True)
         self.__set_matrix(variable, self.__get_matrix(x).transpose())
     
     def execute(self, instruction: dict):
@@ -96,36 +139,39 @@ class MatrixOperationExecutor(object):
         """
         operator = instruction["operator"]
         variable = instruction["var"]
-        matrix_x = instruction["x"]
-        matrix_y = instruction["y"]
+        x, y = instruction["x"], instruction["y"]
         
         # Obtém a matriz conjugada.
         if operator in ["c", "ct", "tc"]:
-            self.__conjugate(variable, matrix_x, matrix_y)
+            self.__conjugate(variable, x, y)
 
         # Obtém a matriz transposta.
         if operator in ["t", "ct", "tc"]:
-            self.__transpose(variable, matrix_x, matrix_y)
+            self.__transpose(variable, x, y)
             
         # Obtém a matriz adjunta ou cofatora.
         if operator == "adj":
-            self.__adjugate(variable, matrix_x, matrix_y)
+            self.__adjugate(variable, x, y)
 
         elif operator == "cof":
-            self.__cofactor(variable, matrix_x, matrix_y)
+            self.__cofactor(variable, x, y)
 
         # Obtém a inversa da matriz.
         elif operator == "inv":
-            self.__inverse(variable, matrix_x, matrix_y)
+            self.__inverse(variable, x, y)
 
         # Obtém o menor complementar da matriz.
         elif operator.startswith("m"):
-            self.__minor(variable, matrix_x, matrix_y, operator)
+            self.__minor(variable, x, y, operator)
+
+        # Eleva a matriz a um número N.
+        elif operator == "**":
+            self.__pow(variable, x, y)
 
         # Soma ou subtrai as matrizes.
         elif operator in "+-":
-            self.__add(variable, matrix_x, matrix_y, "-" == operator)
+            self.__add(variable, x, y, "-" == operator)
 
         # Multiplica ou divide a matriz.
         elif operator in "*/":
-            self.__mult(variable, matrix_x, matrix_y, "/" == operator)
+            self.__mult(variable, x, y, "/" == operator)

@@ -5,6 +5,7 @@ def load_instructions(filename):
     """
     Função geradora para retornar instruções de um arquivo.
     """
+    if not filename: raise NoFilenameError
     if not os.path.exists(filename): raise UserFileNotFoundError(filename)
     
     with open(filename) as file:

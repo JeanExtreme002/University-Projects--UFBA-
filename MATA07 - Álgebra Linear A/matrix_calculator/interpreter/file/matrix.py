@@ -30,6 +30,7 @@ def load_matrices(filename):
     Função geradora para retornar matrizes de um arquivo.
     As matrizes do arquivo devem estar no formato "NOME linha,coluna: valor1, valor2, ..."
     """
+    if not filename: raise NoFilenameError
     if not os.path.exists(filename): raise UserFileNotFoundError(filename)
     
     with open(filename) as file:
@@ -43,6 +44,8 @@ def save_matrices(filename, matrices):
     """
     Função para salvar uma lista de matrizes em um arquivo.s
     """
+    if not filename: raise NoFilenameError
+    
     with open(filename, "w") as file:
         # Percorre o dicionário de matrizes, salvando uma matriz em cada linha.
         for matrix in matrices:

@@ -84,7 +84,7 @@ class Application(object):
             self.execute(self.__terminal.input()) 
 
     def save_matrices(self, filename):
-        matrices = [{"name": name, "order": matrix.get_order(), "values": [v for r,c,v in matrix]} for name, matrix in self.__matrices.items()]
+        matrices = [{"name": name, "order": matrix.get_order(), "values": matrix.to_list()} for name, matrix in self.__matrices.items()]
         save_matrices(filename, matrices)
 
     def set_config(self, name, value):
