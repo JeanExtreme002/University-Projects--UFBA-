@@ -49,6 +49,8 @@ MATRIZ_A = MATRIZ_B * Escalar   // Multiplicação por Escalar
   
 MATRIZ_A = MATRIZ_B / Escalar   // Divisão por Escalar
 
+MATRIZ_A = MATRIZ_B ** N        // Eleva a matriz a um valor N inteiro
+
 MATRIZ_A = MATRIZ_B c           // Conjugada
 
 MATRIZ_A = MATRIZ_B t           // Transposta
