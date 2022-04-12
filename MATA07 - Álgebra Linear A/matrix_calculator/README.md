@@ -23,6 +23,7 @@ MATRIZB 7,8: -4i, 5.7, 120, -7, -i, 0, 55, -1-i, 9999
 # Comandos do Terminal:
 | Comando                    | Descrição                                            |
 | -------------------------- | ---------------------------------------------------- |
+| clear                      | Apaga o histórico de instruções                      |
 | delete \<matrix\>          | Deleta uma matriz                                    |
 | execute \<arquivo.ext\>    | Carrega um arquivo de instruções e as executa        | 
 | exit                       | Encerra o programa                                   |
@@ -41,12 +42,12 @@ MATRIZB 7,8: -4i, 5.7, 120, -7, -i, 0, 55, -1-i, 9999
 MATRIZ_A = MATRIZ_B + MATRIZ_C  // Soma de Matrizes
   
 MATRIZ_A = Matriz_B - MATRIZ_C  // Subtração de Matrizes
+
+MATRIZ_A = MATRIZ_B * MATRIZ_C  // Produto de Matrizes
   
 MATRIZ_A = MATRIZ_B * Escalar   // Multiplicação por Escalar
   
 MATRIZ_A = MATRIZ_B / Escalar   // Divisão por Escalar
-  
-MATRIZ_A = MATRIZ_B * MATRIZ_C  // Produto de Matrizes
 
 MATRIZ_A = MATRIZ_B c           // Conjugada
 
