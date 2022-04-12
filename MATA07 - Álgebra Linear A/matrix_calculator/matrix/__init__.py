@@ -1,9 +1,4 @@
-class MatrixOrderError(Exception):
-    pass
-
-class NonInvertibleMatrixError(Exception):
-    pass
-
+from .errors import *
 
 class Matrix(object):
     
