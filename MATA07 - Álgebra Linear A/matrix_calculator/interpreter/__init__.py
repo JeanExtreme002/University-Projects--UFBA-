@@ -70,9 +70,6 @@ class Application(object):
         try: return self.get_matrix(self.__current_matrix_name), self.__current_matrix_name
         except: raise NoMatrixInUseError
    
-    def load_matrices(self, matrices):
-        self.__matrices.update(matrices)
-
     def load_matrices_from_file(self, filename, encoding = None):
         for matrix in load_matrices(filename, encoding = encoding):
             self.__matrices[matrix["name"]] = Matrix(*matrix["order"], matrix["values"])
