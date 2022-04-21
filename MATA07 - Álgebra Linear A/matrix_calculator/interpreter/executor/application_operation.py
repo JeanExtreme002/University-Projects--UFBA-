@@ -1,5 +1,6 @@
 from .docs import command_list_string
 from .operation_errors import *
+import re
 
 class ApplicationOperationExecutor(object):
     def __init__(self, core):
@@ -38,17 +39,26 @@ class ApplicationOperationExecutor(object):
         string += "\n- Triangular Superior: " + str(matrix.is_upper_triangular())
         return string
 
+    def __parse_file_args(self, string):
+        result = re.findall(" --encoding=([a-zA-Z0-9-]+)$", string)
+        encoding = result[0] if result else None
+
+        filename = string.replace("--encoding=" + encoding, "") if encoding else string
+        return filename.strip(), encoding
+
     def execute(self, instruction: dict):
         command = instruction["command"]
         args = instruction["args"]
         
         # Carrega as matrizes de um arquivo.
         if command == "load":
-            self.__core.load_matrices_from_file(args)
+            filename, encoding = self.__parse_file_args(args)
+            self.__core.load_matrices_from_file(filename = filename, encoding = encoding)
 
         # Salva as matrizes em um arquivo.
         elif command == "save":
-            self.__core.save_matrices(args)
+            filename, encoding = self.__parse_file_args(args)
+            self.__core.save_matrices(filename = filename, encoding = encoding)
 
         # Deleta uma matriz do dicionário de matrizes.
         elif command == "delete":
@@ -56,7 +66,8 @@ class ApplicationOperationExecutor(object):
 
         # Carrega instruções de um arquivo e as executa.
         elif command == "execute":
-            self.__core.execute_instructions(args)
+            filename, encoding = self.__parse_file_args(args)
+            self.__core.execute_instructions(filename = filename, encoding = encoding)
 
         # Altera a configuração de imprimir a matriz na tela.
         elif command == "show":

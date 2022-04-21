@@ -25,28 +25,28 @@ def get_matrix_from_string(string):
         matrix["values"].append(parse_complex_value(value) if "i" in value else float(value))
     return matrix
         
-def load_matrices(filename):
+def load_matrices(filename, encoding = None):
     """
     Função geradora para retornar matrizes de um arquivo.
     As matrizes do arquivo devem estar no formato "NOME linha,coluna: valor1, valor2, ..."
     """
     if not filename: raise NoFilenameError
     if not os.path.exists(filename): raise UserFileNotFoundError(filename)
-    
-    with open(filename) as file:
+
+    with open(filename, encoding = encoding) as file:
         for line in file:
             try:
                 matrix = get_matrix_from_string(line)
                 if matrix: yield matrix
             except: raise UserFileDecodingError
 
-def save_matrices(filename, matrices):
+def save_matrices(filename, matrices, encoding = None):
     """
     Função para salvar uma lista de matrizes em um arquivo.s
     """
     if not filename: raise NoFilenameError
     
-    with open(filename, "w") as file:
+    with open(filename, "w", encoding = encoding) as file:
         # Percorre o dicionário de matrizes, salvando uma matriz em cada linha.
         for matrix in matrices:
             line = "{} {},{}: ".format(matrix["name"], *matrix["order"])

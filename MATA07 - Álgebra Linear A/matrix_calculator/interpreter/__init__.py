@@ -44,10 +44,10 @@ class Application(object):
             self.__terminal.output(error, error = True, error_line = n_line)
             return False
 
-    def execute_instructions(self, filename):
+    def execute_instructions(self, filename, encoding = None):
         line_count = 0
         
-        for instruction in load_instructions(filename):
+        for instruction in load_instructions(filename, encoding = encoding):
             line_count += 1
 
             # Se não houver instrução, o programa prossegue para a próxima.
@@ -73,8 +73,8 @@ class Application(object):
     def load_matrices(self, matrices):
         self.__matrices.update(matrices)
 
-    def load_matrices_from_file(self, filename):
-        for matrix in load_matrices(filename):
+    def load_matrices_from_file(self, filename, encoding = None):
+        for matrix in load_matrices(filename, encoding = encoding):
             self.__matrices[matrix["name"]] = Matrix(*matrix["order"], matrix["values"])
 
     def run(self):
@@ -86,9 +86,9 @@ class Application(object):
             self.__terminal.update()
             self.execute(self.__terminal.input()) 
 
-    def save_matrices(self, filename):
+    def save_matrices(self, filename, encoding = None):
         matrices = [{"name": name, "order": matrix.get_order(), "values": matrix.to_list()} for name, matrix in self.__matrices.items()]
-        save_matrices(filename, matrices)
+        save_matrices(filename, matrices, encoding = encoding)
 
     def set_config(self, name, value):
         self.__terminal.set_config(name, value)
