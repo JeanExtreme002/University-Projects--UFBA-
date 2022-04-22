@@ -19,7 +19,7 @@ template <typename ElementType> class LinkedList {
         const int BEGIN = 0;
         const int END = -1;
 
-        LinkedElement<ElementType> *firstElement;
+        LinkedElement<ElementType> *firstElement = NULL;
         int length = 0;
 
         /**
@@ -150,10 +150,11 @@ template <typename ElementType> class LinkedList {
             if (index == BEGIN) {
                 struct LinkedElement<ElementType> *targetElement = firstElement;
 
-                if (length != 0) {
-                    firstElement = targetElement->next;
-                }
-                return targetElement->content;
+                firstElement = targetElement->next;
+                ElementType content = targetElement->content;
+
+                delete targetElement;
+                return content;
             }
 
             // Obtém o elemento no índice especificado.
@@ -167,6 +168,9 @@ template <typename ElementType> class LinkedList {
 
             // Conecta o elemento anterior com o sucessor do elemento alvo.
             previousElement->next = targetElement->next;
-            return targetElement->content;
+            ElementType content = targetElement->content;
+
+            delete targetElement;
+            return content;
         }
 };
