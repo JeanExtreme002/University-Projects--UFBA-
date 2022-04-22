@@ -64,6 +64,13 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para adicionar um elemento ao final da lista, utilizando a atribuição com soma.
+        */
+        void operator +=(ElementType element) {
+            return add(element);
+        }       
+
+        /**
         Método para retornar o tamanho da lista.
         */
         int getLength() {
