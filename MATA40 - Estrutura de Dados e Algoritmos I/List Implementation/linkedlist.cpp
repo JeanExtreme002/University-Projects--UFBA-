@@ -64,6 +64,15 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para limpar a lista.
+        */
+        void clear() {
+            while (length != 0) {
+                remove(0);
+            }
+        }
+
+        /**
         Método para inserir um elemento em uma posição existente da lista.
         */
         void insert(int index, ElementType element) {
