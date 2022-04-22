@@ -1,6 +1,5 @@
 #include <stdexcept>
-#include <iostream>
-using namespace std;
+
 /**
 LinkedElement é uma struct utilizada pela classe LinkedList, no qual 
 possuirá o seu próprio conteúdo e o endereço do elemento ao qual está vinculado.
