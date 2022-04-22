@@ -73,6 +73,30 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para verificar se a lista possui um determinado elemento.
+        */
+        bool contains(ElementType element) {
+            for (int index = 0; index < length; index++) {
+                if (get(index) == element) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+        Método para contar quantos elementos X existem na lista.
+        */
+        int count(ElementType element) {
+            int elementCount = 0;
+
+            for (int index = 0; index < length; index++) {
+                elementCount += get(index) == element ? 1 : 0;
+            }
+            return elementCount;
+        }
+
+        /**
         Método para inserir um elemento em uma posição existente da lista.
         */
         void insert(int index, ElementType element) {
@@ -121,14 +145,14 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para obter um elemento a partir de um índice, utilizando a sintaxe dos colchetes.
+        Método para retornar um elemento, a partir de um índice, utilizando a sintaxe dos colchetes.
         */
         ElementType operator[](int index) {
             return get(index);
         }
 
         /**
-        Método para obter um elemento a partir de um índice.
+        Método para retornar um elemento, a partir de um índice.
         */
         ElementType get(int index) {
 
@@ -146,6 +170,9 @@ template <typename ElementType> class LinkedList {
             return targetElement->content;
         }
 
+        /**
+        Método para remover um elemento, a partir de um índice.
+        */
         ElementType remove(int index) {
 
             // Valida o índice recebido.
