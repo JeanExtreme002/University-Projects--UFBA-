@@ -50,6 +50,20 @@ template <typename ElementType> class LinkedList {
 
     public:
         /**
+        Destrutor da classe.
+        */
+        ~LinkedList() {
+            clear();
+        }
+
+        /**
+        Método para retornar um elemento, a partir de um índice, utilizando a sintaxe dos colchetes.
+        */
+        ElementType operator [](int index) {
+            return get(index);
+        }
+
+        /**
         Método para retornar o tamanho da lista.
         */
         int getLength() {
@@ -142,13 +156,6 @@ template <typename ElementType> class LinkedList {
             // e o atual elemento no índice especificado.
             previousElement->next = newElement;
             newElement->next = targetElement;
-        }
-
-        /**
-        Método para retornar um elemento, a partir de um índice, utilizando a sintaxe dos colchetes.
-        */
-        ElementType operator[](int index) {
-            return get(index);
         }
 
         /**
