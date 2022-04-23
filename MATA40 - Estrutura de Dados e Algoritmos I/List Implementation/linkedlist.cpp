@@ -41,6 +41,32 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para retornar um elemento, ponteiro de LinkedElement, através do índice.
+        */
+        struct LinkedElement<ElementType> *getLinkedElement(int index) {
+            struct LinkedElement<ElementType> *targetElement;
+            bool searchFromBegin = (index < length / 2);
+
+            // Se o índice for maior que a metade da lista, é mais eficiente começar 
+            // a busca a partir do final da lista.
+            if (searchFromBegin) {
+                targetElement = firstElement;
+            }
+            else {
+                targetElement = lastElement;
+                index = length - index - 1;
+            }
+
+            // Percorre os elementos, começando da direita para esquerda ou da esquerda para direita.
+            for (int i = 0; i < index; i++) {
+                targetElement = searchFromBegin ? targetElement->next : targetElement->previous;
+            }
+
+            // Retorna o elemento encontrado.
+            return targetElement;
+        }
+
+        /**
         Método para validar um índice, verificando se ele é menor que o tamanho da lista.
         */
         bool validateIndex(int index, bool throwError = false) {
@@ -63,7 +89,8 @@ template <typename ElementType> class LinkedList {
             struct LinkedElement<ElementType> *start;
             struct LinkedElement<ElementType> *end;
 
-            // Move a lista para a esquerda ou direita, alterando o elemento inicial e final.
+            // Move a lista para a esquerda ou direita, alterando 
+            // o elemento inicial e final da lista.
             if (direction == LEFT) {
                 start = firstElement->next;
                 end = firstElement;
@@ -222,12 +249,8 @@ template <typename ElementType> class LinkedList {
                 return;
             }
 
-            // Percorre todos os elementos ligados até chegar ao elemento alvo.
-            struct LinkedElement<ElementType> *targetElement = firstElement;
-
-            for (int i = 0; i < index; i++) {
-                targetElement = targetElement->next;
-            }
+            // Obtém o elemento alvo, através do índice especificado.
+            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
     
             // Insere no elemento na lista, colocando-o entre o elemento anterior
             // e o atual elemento no índice especificado.
@@ -246,12 +269,8 @@ template <typename ElementType> class LinkedList {
             // Valida o índice recebido.
             validateIndex(index, true);
 
-            // Obtém o elemento no índice especificado.
-            struct LinkedElement<ElementType> *targetElement = firstElement;
-
-            for (int i = 0; i < index; i++) {
-                targetElement = targetElement->next;
-            }
+            // Obtém o elemento alvo, através do índice especificado.
+            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
 
             // Retorna o seu conteúdo.
             return targetElement->content;
@@ -299,12 +318,8 @@ template <typename ElementType> class LinkedList {
                 return content;
             }
 
-            // Obtém o elemento no índice especificado.
-            struct LinkedElement<ElementType> *targetElement = firstElement;
-
-            for (int i = 0; i < index; i++) {
-                targetElement = targetElement->next;
-            }
+            // Obtém o elemento alvo, através do índice especificado.
+            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
 
             // Conecta o elemento anterior com o sucessor do elemento alvo.
             targetElement->previous->next = targetElement->next;
