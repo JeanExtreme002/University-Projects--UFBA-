@@ -175,8 +175,19 @@ template <typename ElementType> class LinkedList {
         Método para verificar se a lista possui um determinado elemento.
         */
         bool contains(ElementType element) {
-            for (int index = 0; index < length; index++) {
-                if (get(index) == element) {
+            struct LinkedElement<ElementType> *targetElement = firstElement;
+
+            // Verifica se o primeiro elemento é igual.
+            if (firstElement->content == element) {
+                return true;
+            }
+
+            // Percorre os elementos da lista, verificando
+            // se um deles é igual ao elemento recebido.
+            for (int i = 0; i < length; i++) {
+                targetElement = targetElement->next;
+
+                if (targetElement->content == element) {
                     return true;
                 }
             }
@@ -187,10 +198,17 @@ template <typename ElementType> class LinkedList {
         Método para contar quantos elementos X existem na lista.
         */
         int count(ElementType element) {
-            int elementCount = 0;
+            int elementCount = firstElement->content == element ? 1 : 0;
+            struct LinkedElement<ElementType> *targetElement = firstElement;
 
-            for (int index = 0; index < length; index++) {
-                elementCount += get(index) == element ? 1 : 0;
+            // Percorre os elementos da lista, verificando
+            // se são iguais ao elemento recebido.
+            for (int i = 0; i < length; i++) {
+                targetElement = targetElement->next;
+
+                if (targetElement->content == element) {
+                    elementCount++;
+                }
             }
             return elementCount;
         }
