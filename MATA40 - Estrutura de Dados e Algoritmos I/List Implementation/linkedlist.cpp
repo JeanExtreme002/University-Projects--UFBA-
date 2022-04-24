@@ -179,7 +179,15 @@ template <typename ElementType> class LinkedList {
         */
         bool operator ==(LinkedList &list) {
             return equals(list);
-        }            
+        }
+
+        /**
+        Método para comparar uma lista com outra, verificando a diferença, 
+        utilizando o operador de comparação.
+        */
+        bool operator !=(LinkedList &list) {
+            return !equals(list);
+        }             
 
         /**
         Método para retornar o tamanho da lista.
