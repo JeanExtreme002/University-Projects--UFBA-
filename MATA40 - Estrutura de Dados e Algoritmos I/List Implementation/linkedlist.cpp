@@ -138,7 +138,7 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para retornar um elemento (sua referência), a partir de um índice, 
+        Método para retornar um elemento, a partir de um índice, 
         utilizando a sintaxe dos colchetes.
         */
         ElementType &operator [](int index) {
@@ -336,7 +336,7 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para retornar um elemento (sua referência), a partir de um índice.
+        Método para retornar um elemento, a partir de um índice.
         */
         ElementType &get(int index) {
 
@@ -402,5 +402,23 @@ template <typename ElementType> class LinkedList {
             length--;
 
             return content;
+        }
+
+        /**
+        Método para retornar uma cópia da lista, copiando todos os seus elementos.
+        */
+        LinkedList<ElementType> &copy() {
+
+            // Cria na memória um novo objeto da lista.
+            LinkedList<ElementType> * newList = new LinkedList<ElementType>;
+            struct LinkedElement<ElementType> *element = lastElement;
+
+            // Percorre os elementos, adicionando-os à nova lista.
+            for (int i = 0; i < length; i++) {
+                element = element->next;
+                newList->add(element->content);
+            }
+
+            return *newList;
         }
 };
