@@ -17,10 +17,10 @@ elemento estará vinculado com próximo elemento da lista.
 */
 template <typename ElementType> class LinkedList {
     private:
-        const int BEGIN = 0;
-        const int END = -1;
-        const int LEFT = 0;
-        const int RIGHT = -1;
+        const static int BEGIN = 0;
+        const static int END = -1;
+        const static int LEFT = 0;
+        const static int RIGHT = -1;
 
         int length = 0;
 
@@ -138,9 +138,10 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para retornar um elemento, a partir de um índice, utilizando a sintaxe dos colchetes.
+        Método para retornar um elemento (sua referência), a partir de um índice, 
+        utilizando a sintaxe dos colchetes.
         */
-        ElementType operator [](int index) {
+        ElementType &operator [](int index) {
             return get(index);
         }
 
@@ -327,9 +328,9 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para retornar um elemento, a partir de um índice.
+        Método para retornar um elemento (sua referência), a partir de um índice.
         */
-        ElementType get(int index) {
+        ElementType &get(int index) {
 
             // Valida o índice recebido.
             validateIndex(index, true);
