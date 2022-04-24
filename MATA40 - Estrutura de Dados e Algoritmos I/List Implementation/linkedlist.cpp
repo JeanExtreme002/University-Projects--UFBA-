@@ -67,6 +67,31 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para comparar uma lista com outra.
+        */
+        bool equals(LinkedList &list) {
+
+            // Verifica se os tamanhos das listas são os mesmos.
+            if (list.getLength() != length) {
+                return false;
+            }
+
+            struct LinkedElement<ElementType> *element1 = list.lastElement;
+            struct LinkedElement<ElementType> *element2 = lastElement;
+
+            // Percorre os elementos de ambas as listas, verificando se são diferentes.
+            for (int i = 0; i < length; i++) {
+                element1 = element1->next;
+                element2 = element2->next;
+
+                if (element1->content != element2->content) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
         Método para validar um índice, verificando se ele é menor que o tamanho da lista.
         */
         bool validateIndex(int index, bool throwError = false) {
@@ -146,7 +171,14 @@ template <typename ElementType> class LinkedList {
         */
         void operator +=(ElementType element) {
             return add(element);
-        }       
+        }
+
+        /**
+        Método para comparar uma lista com outra, utilizando o operador de comparação.
+        */
+        bool operator ==(LinkedList &list) {
+            return equals(list);
+        }            
 
         /**
         Método para retornar o tamanho da lista.
@@ -175,12 +207,7 @@ template <typename ElementType> class LinkedList {
         Método para verificar se a lista possui um determinado elemento.
         */
         bool contains(ElementType element) {
-            struct LinkedElement<ElementType> *targetElement = firstElement;
-
-            // Verifica se o primeiro elemento é igual.
-            if (firstElement->content == element) {
-                return true;
-            }
+            struct LinkedElement<ElementType> *targetElement = lastElement;
 
             // Percorre os elementos da lista, verificando
             // se um deles é igual ao elemento recebido.
@@ -198,8 +225,8 @@ template <typename ElementType> class LinkedList {
         Método para contar quantos elementos X existem na lista.
         */
         int count(ElementType element) {
-            int elementCount = firstElement->content == element ? 1 : 0;
-            struct LinkedElement<ElementType> *targetElement = firstElement;
+            struct LinkedElement<ElementType> *targetElement = lastElement;
+            int elementCount = 0;
 
             // Percorre os elementos da lista, verificando
             // se são iguais ao elemento recebido.
@@ -211,6 +238,24 @@ template <typename ElementType> class LinkedList {
                 }
             }
             return elementCount;
+        }
+
+        /**
+        Método para retornar o índice de um dado elemento.
+        */
+        int indexOf(ElementType element) {
+            struct LinkedElement<ElementType> *targetElement = lastElement;
+
+            // Percorre os elementos da lista, verificando 
+            // se são iguais ao elemento recebido.
+            for (int index = 0; index < length; index++) {
+                targetElement = targetElement->next;
+
+                if (targetElement->content == element) {
+                    return index;
+                }
+            }
+            return -1;
         }
 
         /**
@@ -228,22 +273,19 @@ template <typename ElementType> class LinkedList {
 
             // Se não houver elemento na lista, o elemento será adicionado como 
             // o primeiro e último da lista.
-            if (length++ == 0) {
+            if (length == 0) {
                 firstElement = newElement;
                 firstElement->previous = newElement;
                 firstElement->next = newElement;
 
-                lastElement = newElement;
-                lastElement->previous = newElement;
-                lastElement->next = newElement;
-                return;
+                lastElement = firstElement;
             }
 
             // Caso solicitado a inserção do elemento no início da lista, será necessário
             // apenas vincular o último elemento com o elemento da inserção e o elemento
             // da inserção com o primeiro elemento. Após isso, o primeiro elemento passará
             // a ser o elemento da inserção.
-            if (index == BEGIN) {
+            else if (index == BEGIN) {
                 newElement->next = firstElement;
                 newElement->previous = lastElement;
 
@@ -251,32 +293,37 @@ template <typename ElementType> class LinkedList {
                 lastElement->next = newElement;
 
                 firstElement = newElement;
-                return;
             }
 
             // Caso solicitado a inserção do elemento no final da lista, será necessário
             // apenas vincular o último elemento com o elemento da inserção e o elemento
             // da inserção com o primeiro elemento. Após isso, o último elemento passará
             // a ser o elemento da inserção.
-            if (index == END) {
+            else if (index == END) {
                 newElement->next = firstElement;
                 newElement->previous = lastElement;
 
                 lastElement->next = newElement;
+                firstElement->previous = newElement;
+
                 lastElement = newElement;
-                return;
             }
 
-            // Obtém o elemento alvo, através do índice especificado.
-            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
-    
-            // Insere no elemento na lista, colocando-o entre o elemento anterior
-            // e o atual elemento no índice especificado.
-            newElement->next = targetElement;
-            newElement->previous = targetElement->previous;
+            // Caso solicitado a inserção do elemento entre dois elementos, será necessário
+            // obter o elemento que ocupa a posição especificada, para então vincular
+            // o elemento de inserção com o elemento anterior e o elemento que ocupa a posição.
+            else {
+                struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
 
-            targetElement->previous->next = newElement;
-            targetElement->previous = newElement;
+                newElement->next = targetElement;
+                newElement->previous = targetElement->previous;
+
+                targetElement->previous->next = newElement;
+                targetElement->previous = newElement;
+            }
+
+            // Computa a inserção do elemento na lista.
+            length++;
         }
 
         /**
@@ -302,48 +349,49 @@ template <typename ElementType> class LinkedList {
             // Valida o índice recebido.
             validateIndex(index, true);
 
-            // Computa a remoção de elemento.
-            length--;
+            // Cria um ponteiro para receber o elemento a ser removido.
+            struct LinkedElement<ElementType> *targetElement;
 
             // Caso solicitado a remoção do elemento no primeiro índice, será necessário
             // apenas vincular o segundo elemento com o último elemento. Após isso, 
             // o primeiro elemento da lista será o segundo elemento.
             if (index == BEGIN) {
-                struct LinkedElement<ElementType> *targetElement = firstElement;
+                targetElement = firstElement;
 
                 lastElement->next = targetElement->next;
                 targetElement->next->previous = lastElement;
 
                 firstElement = targetElement->next;
-                ElementType content = targetElement->content;
-
-                delete targetElement;
-                return content;
             }
 
             // Caso solicitado a remoção do último elemento da lista, será necessário
             // apenas vincular o penúltimo elemento com o primeiro elemento. Após isso,
             // o penúltimo elemento da lista será o último elemento.
-            if (index == length - 1) {
-                struct LinkedElement<ElementType> *targetElement = lastElement;
-
+            else if (index == (length - 1)) {
+                targetElement = lastElement;
+        
                 targetElement->previous->next = firstElement;
                 firstElement->previous = targetElement->previous;
 
-                ElementType content = targetElement->content;
-
-                delete targetElement;
-                return content;
+                lastElement = targetElement->previous;
             }
 
-            // Obtém o elemento alvo, através do índice especificado.
-            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
+            // Caso solicitado a remoção de um elemento entre dois elementos, será necessário
+            // obter o elemento que ocupa a posição especificada, para então vincular o seu
+            // elemento antecessor com o elemento sucessor, removendo a ligação do elemento alvo.
+            else {
+                targetElement = getLinkedElement(index);
+                targetElement->previous->next = targetElement->next;
+                targetElement->next->previous = targetElement->previous;
+            }
 
-            // Conecta o elemento anterior com o sucessor do elemento alvo.
-            targetElement->previous->next = targetElement->next;
+            // Salva o conteúdo e apaga o elemento da memória.
             ElementType content = targetElement->content;
-
             delete targetElement;
+
+            // Computa a remoção do elemento.
+            length--;
+
             return content;
         }
 };
