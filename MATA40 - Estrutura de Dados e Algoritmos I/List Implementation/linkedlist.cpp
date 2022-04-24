@@ -105,6 +105,9 @@ template <typename ElementType> class LinkedList {
             return false;
         }
 
+        /**
+        Método para mover a lista para a esquerda ou direita.
+        */
         void move(int direction) {
             // Não é possível mover a lista caso haja menos de dois elementos.
             if (length < 2) {
@@ -146,7 +149,7 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método mover a lista N vezes à esquerda.
+        Método para mover a lista N vezes à esquerda.
         */
         void operator <<(int steps) {
             steps %= length;
@@ -157,7 +160,7 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método mover a lista N vezes à direita.
+        Método para mover a lista N vezes à direita.
         */
         void operator >>(int steps) {
             steps %= length;
