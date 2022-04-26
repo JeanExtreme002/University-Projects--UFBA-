@@ -32,11 +32,20 @@ template <typename ElementType> class Matrix {
         }
 
         /**
+        Método para verificar se um dado índice é válido.
+        */
+        void validateIndex(int index) {
+            if (index >= length) {
+                throw std::out_of_range("list index out of range");
+            }
+        }
+
+        /**
         Método para verificar se a matriz é igual à outra.
         */
         bool equals(Matrix &matrix) {
 
-            // Verifica se a ordem das matrizes é a mesma.
+            // Verifica se a ordem das matrizes é diferente.
             if (matrix.order[0] != order[0] || matrix.order[1] != order[1]) {
                 return false;
             }
@@ -51,6 +60,9 @@ template <typename ElementType> class Matrix {
         }
 
     public:
+        /**
+        Construtor da classe.
+        */
         Matrix(int rows, int columns) {
 
             // Verifica se a quantidade de linhas e colunas é maior que zero.
@@ -67,11 +79,19 @@ template <typename ElementType> class Matrix {
 
         }
 
+        /**
+        Destrutor da classe.
+        */
         ~Matrix() {
             delete[] array;
         }
 
+        /**
+        Método para retornar um elemento da matriz, a partir de um índice, 
+        utilizando a sintaxe dos colchetes.
+        */
         ElementType &operator [](int index) {
+            validateIndex(index);
             return array[index];
         }
 

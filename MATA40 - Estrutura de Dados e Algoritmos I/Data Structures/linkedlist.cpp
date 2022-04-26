@@ -71,7 +71,7 @@ template <typename ElementType> class LinkedList {
         */
         bool equals(LinkedList &list) {
 
-            // Verifica se os tamanhos das listas são os mesmos.
+            // Verifica se o tamanho das listas é diferente.
             if (list.getLength() != length) {
                 return false;
             }
@@ -336,6 +336,20 @@ template <typename ElementType> class LinkedList {
 
             // Computa a inserção do elemento na lista.
             length++;
+        }
+
+        /**
+        Método para definir um elemento, em um dado índice.
+        */
+        void set(int index, ElementType element) {
+
+            // Valida o índice recebido.
+            validateIndex(index, true);  
+
+            // Obtém o elemento alvo, através do índice especificado.
+            struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
+
+            targetElement->content = element;
         }
 
         /**
