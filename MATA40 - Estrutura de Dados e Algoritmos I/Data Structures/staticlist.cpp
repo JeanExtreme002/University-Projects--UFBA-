@@ -41,8 +41,8 @@ template <typename ElementType> class StaticList {
         Método para mover a lista para a esquerda ou direita.
         */
         void move(int direction) {
-            int step = direction == LEFT ? 1 : -1;
-            beginsAt = (beginsAt + step) % length;
+            beginsAt += direction == LEFT ? 1 : -1;
+            beginsAt = beginsAt < 0 ? (length + beginsAt) : (beginsAt % length);
         }
 
     public:
