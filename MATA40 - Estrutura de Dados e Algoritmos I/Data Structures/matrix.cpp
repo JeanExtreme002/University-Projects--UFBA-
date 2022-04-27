@@ -159,6 +159,15 @@ template <typename ElementType> class Matrix {
         }
 
         /**
+        Método para preencher a matriz com um dado elemento.
+        */
+        void fill(ElementType element) {
+            for (int index = 0; index < length; index++) {
+                array[index] = element;
+            }
+        }
+
+        /**
         Método para definir um elemento, em uma dada posição.
         */
         void set(int row, int column, ElementType element) {

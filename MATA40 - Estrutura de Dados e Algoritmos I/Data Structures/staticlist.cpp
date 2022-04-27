@@ -154,6 +154,15 @@ template <typename ElementType> class StaticList {
         }
 
         /**
+        Método para preencher a lista com um dado elemento.
+        */
+        void fill(ElementType element) {
+            for (int index = 0; index < length; index++) {
+                array[index] = element;
+            }
+        }
+
+        /**
         Método para definir um elemento, em um dado índice.
         */
         void set(int index, ElementType element) {

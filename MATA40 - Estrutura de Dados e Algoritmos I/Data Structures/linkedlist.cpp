@@ -339,6 +339,18 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para preencher a lista com um dado elemento.
+        */
+        void fill(ElementType element) {
+            struct LinkedElement<ElementType> *targetElement = lastElement;
+
+            for (int index = 0; index < length; index++) {
+                targetElement = targetElement->next;
+                targetElement->content = element;
+            }
+        }
+
+        /**
         Método para definir um elemento, em um dado índice.
         */
         void set(int index, ElementType element) {
