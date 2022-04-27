@@ -351,6 +351,15 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
+        Método para adicionar todos os elementos de uma dada lista.
+        */
+        void expand(LinkedList<ElementType> &list) {
+            for (int index = 0; index < list.getLength(); index++) {
+                add(list[index]);
+            }
+        }
+
+        /**
         Método para definir um elemento, em um dado índice.
         */
         void set(int index, ElementType element) {
@@ -440,14 +449,9 @@ template <typename ElementType> class LinkedList {
 
             // Cria na memória um novo objeto da lista.
             LinkedList<ElementType> * newList = new LinkedList<ElementType>;
-            struct LinkedElement<ElementType> *element = lastElement;
 
-            // Percorre os elementos, adicionando-os à nova lista.
-            for (int i = 0; i < length; i++) {
-                element = element->next;
-                newList->add(element->content);
-            }
-
+            // Adiciona todos os elementos na nova lista.
+            newList->expand(*this);
             return *newList;
         }
 };
