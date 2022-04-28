@@ -152,6 +152,10 @@ template <typename ElementType> class LinkedList {
         Método para mover a lista N vezes à esquerda.
         */
         void operator <<(int steps) {
+            if (length == 0) {
+                return;
+            }
+
             steps %= length;
 
             for (int i = 0; i < steps; i++) {
@@ -163,6 +167,10 @@ template <typename ElementType> class LinkedList {
         Método para mover a lista N vezes à direita.
         */
         void operator >>(int steps) {
+            if (length == 0) {
+                return;
+            }
+            
             steps %= length;
 
             for (int i = 0; i < steps; i++) {
@@ -372,6 +380,38 @@ template <typename ElementType> class LinkedList {
             struct LinkedElement<ElementType> *targetElement = getLinkedElement(index);
 
             targetElement->content = element;
+        }
+
+        /**
+        Método para ordenar a lista (algoritmo: SelectionSort).
+        */
+        void sort(bool reverse = false) {
+            // Percorre todas as posições a serem alteradas, obtendo o elemento de cada uma delas.
+            for (int current = 0; current < length; current++) {
+                struct LinkedElement<ElementType> *currentElement = getLinkedElement(current);
+                
+                // Percorre todas as posições, após a posição alvo, procurando por um elemento menor.
+                for (int index = current + 1; index < length; index++) {
+                    struct LinkedElement<ElementType> *element = getLinkedElement(index);
+
+                    // Se solicitado na ordem crescente, o elemento deve ser menor
+                    // que o elemento na posição atual para realizar a troca.
+                    if (!reverse && (element->content >= currentElement->content)) {
+                        continue;
+                    }
+
+                    // Se solicitado na ordem decrescente, o elemento deve ser maior
+                    // que o elemento na posição atual para realizar a troca.
+                    if (reverse && (element->content <= currentElement->content)) {
+                        continue;
+                    }
+
+                    // Altera o conteúdo dos elementos.
+                    ElementType elementContent = element->content;
+                    element->content = currentElement->content;
+                    currentElement->content = elementContent;
+                }
+            }
         }
 
         /**
