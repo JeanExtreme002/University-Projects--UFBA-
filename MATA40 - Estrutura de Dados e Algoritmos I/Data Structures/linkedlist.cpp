@@ -132,6 +132,55 @@ template <typename ElementType> class LinkedList {
             lastElement = end;
         }
 
+        /**
+        Método recursivo para ordenar a lista, utilizando o algoritmo QuickSort.
+        */
+        void quickSort(bool reverse, struct LinkedElement<ElementType> *first, struct LinkedElement<ElementType> *pivot, int steps) {
+            
+            // Se não houver itens para ordenar, ele encerra a execução.
+            if (steps == 0) {
+                return;
+            }
+
+            struct LinkedElement<ElementType> *elementOnLeft = first;
+            struct LinkedElement<ElementType> *element = first->previous;
+
+            int separator = 0;
+
+            // Organiza a lista em elementos menores e maiores que o pivô recebido.
+            for (int index = 0; index < steps; index++) {
+                element = element->next;
+
+                // Se o elemento for menor que o pivô, ele será colocado à esquerda do separador.
+                if (compare(reverse, element->content, pivot->content)) {
+                    ElementType content = element->content;
+
+                    element->content = elementOnLeft->content;
+                    elementOnLeft->content = content;
+
+                    elementOnLeft = elementOnLeft->next;
+                    separator++;
+                }
+            }
+
+            // Divide a lista em duas partes e realiza o mesmo procedimento para as suas metades.
+            quickSort(reverse, first, elementOnLeft->previous->previous, separator - 1);
+            quickSort(reverse, elementOnLeft, pivot, steps - separator);
+        }
+
+        /**
+        Método utilizado pelo método de "sorting" para comparar os elementos.
+        */
+        bool compare(bool reverse, ElementType element1, ElementType element2) {
+            if (!reverse && (element1 <= element2)) {
+                return true;
+            }
+            if (reverse && (element1 >= element2)) {
+                return true;
+            }
+            return false;
+        }
+
     public:
         /**
         Destrutor da classe.
@@ -383,35 +432,10 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para ordenar a lista (algoritmo: SelectionSort).
+        Método para ordenar a lista (algoritmo: QuickSort).
         */
         void sort(bool reverse = false) {
-            // Percorre todas as posições a serem alteradas, obtendo o elemento de cada uma delas.
-            for (int current = 0; current < length; current++) {
-                struct LinkedElement<ElementType> *currentElement = getLinkedElement(current);
-                
-                // Percorre todas as posições, após a posição alvo, procurando por um elemento menor.
-                for (int index = current + 1; index < length; index++) {
-                    struct LinkedElement<ElementType> *element = getLinkedElement(index);
-
-                    // Se solicitado na ordem crescente, o elemento deve ser menor
-                    // que o elemento na posição atual para realizar a troca.
-                    if (!reverse && (element->content >= currentElement->content)) {
-                        continue;
-                    }
-
-                    // Se solicitado na ordem decrescente, o elemento deve ser maior
-                    // que o elemento na posição atual para realizar a troca.
-                    if (reverse && (element->content <= currentElement->content)) {
-                        continue;
-                    }
-
-                    // Altera o conteúdo dos elementos.
-                    ElementType elementContent = element->content;
-                    element->content = currentElement->content;
-                    currentElement->content = elementContent;
-                }
-            }
+            quickSort(reverse, firstElement, lastElement, length);
         }
 
         /**
