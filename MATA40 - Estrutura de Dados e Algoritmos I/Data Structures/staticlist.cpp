@@ -1,13 +1,18 @@
 #include <stdexcept>
 
+/**
+StaticList é uma classe para criar listas estáticas, ou seja, listas com
+tamanhos predefinidos, permitindo certas manipulações sob ela.
+*/
 template <typename ElementType> class StaticList {
     private:
         const static int LEFT = 0;
         const static int RIGHT = -1;
 
-        ElementType *array;
+        ElementType *array = NULL;
+
         int beginsAt = 0;
-        int length;
+        int length = 0;
 
         /**
         Método para verificar se a lista é igual à outra.
@@ -21,11 +26,19 @@ template <typename ElementType> class StaticList {
 
             // Percorre os elementos, verificando se são diferentes.
             for (int index = 0; index < length; index++) {
-                if (list.array[index] != array[index]) {
+                if (list.get(index) != get(index)) {
                     return false;
                 }
             }
             return true;
+        }
+
+        /**
+        Método para retornar o relativo, levando em conta
+        a posição em que a lista começa.
+        */
+        int getRelativeIndex(int index) {
+            return (beginsAt + index) % length;
         }
 
         /**
@@ -50,6 +63,10 @@ template <typename ElementType> class StaticList {
         Construtor da classe.
         */
         StaticList(int size) {
+            if (size < 0) {
+                throw std::invalid_argument("size must be a positive number");
+            }
+
             length = size;
             array = new ElementType[length];
 
@@ -147,7 +164,12 @@ template <typename ElementType> class StaticList {
         int indexOf(ElementType element) {
             for (int index = 0; index < length; index++) {
                 if (array[index] == element) {
-                    return (index - beginsAt) % length;
+
+                    // Retorna o índice relativo.
+                    if (index < beginsAt) {
+                        return length - (beginsAt - index);
+                    }
+                    return index - beginsAt;
                 }
             }
             return -1;
@@ -167,9 +189,7 @@ template <typename ElementType> class StaticList {
         */
         void set(int index, ElementType element) {
             validateIndex(index);
-
-            index = (beginsAt + index) % length;
-            array[index] = element;
+            array[getRelativeIndex(index)] = element;
         }
 
         /**
@@ -177,9 +197,7 @@ template <typename ElementType> class StaticList {
         */
         ElementType &get(int index) {
             validateIndex(index);
-
-            index = (beginsAt + index) % length;
-            return array[index];
+            return array[getRelativeIndex(index)];
 
         }
 
@@ -192,7 +210,8 @@ template <typename ElementType> class StaticList {
             for (int index = 0; index < length; index++) {
                 newList->array[index] = array[index];
             }
-
+            
+            newList->beginsAt = beginsAt;
             return *newList;
         }
 };

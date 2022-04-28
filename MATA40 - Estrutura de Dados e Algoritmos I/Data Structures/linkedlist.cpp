@@ -178,14 +178,15 @@ template <typename ElementType> class LinkedList {
         }
 
         /**
-        Método para comparar uma lista com outra, utilizando o operador de comparação.
+        Método para verificar se a lista é igual à outra, 
+        utilizando o operador de comparação.
         */
         bool operator ==(LinkedList &list) {
             return equals(list);
         }
 
         /**
-        Método para comparar uma lista com outra, verificando a diferença, 
+        Método para verificar se a lista é diferente de outra, 
         utilizando o operador de comparação.
         */
         bool operator !=(LinkedList &list) {

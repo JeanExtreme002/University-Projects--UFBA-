@@ -1,10 +1,13 @@
 #include <stdexcept>
 
+/**
+Matrix é uma classe para criar uma matriz estática, de ordem predefinida.
+*/
 template <typename ElementType> class Matrix {
     private:
-        ElementType *array;
-        int order[2];
-        int length;
+        ElementType *array = NULL;
+        int order[2] = {0, 0};
+        int length = 0;
 
         /**
         Método para calcular o índice do array através da posição (linha, coluna)
@@ -18,10 +21,10 @@ template <typename ElementType> class Matrix {
         */
         void validatePosition(int row, int column) {
             if (row < 0) {
-                throw std::invalid_argument("matrix row must be a natural number");
+                throw std::invalid_argument("matrix row must be a positive number");
             }
             if (column < 0) {
-                throw std::invalid_argument("matrix column must be a natural number");
+                throw std::invalid_argument("matrix column must be a positive number");
             }
             if (row >= order[0]) {
                 throw std::out_of_range("matrix row out of range");
