@@ -412,8 +412,11 @@ template <typename ElementType> class LinkedList {
         Método para adicionar todos os elementos de uma dada lista.
         */
         void expand(LinkedList<ElementType> &list) {
+            struct LinkedElement<ElementType> *element = list.lastElement;
+
             for (int index = 0; index < list.getLength(); index++) {
-                add(list[index]);
+                element = element->next;
+                add(element->content);
             }
         }
 
