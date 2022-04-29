@@ -142,7 +142,7 @@ template <typename ElementType> class LinkedList {
                 return;
             }
 
-            struct LinkedElement<ElementType> *elementOnLeft = first;
+            struct LinkedElement<ElementType> *elementOnRight = first;
             struct LinkedElement<ElementType> *element = first->previous;
 
             int separator = 0;
@@ -155,17 +155,17 @@ template <typename ElementType> class LinkedList {
                 if (compare(reverse, element->content, pivot->content)) {
                     ElementType content = element->content;
 
-                    element->content = elementOnLeft->content;
-                    elementOnLeft->content = content;
+                    element->content = elementOnRight->content;
+                    elementOnRight->content = content;
 
-                    elementOnLeft = elementOnLeft->next;
+                    elementOnRight = elementOnRight->next;
                     separator++;
                 }
             }
 
             // Divide a lista em duas partes e realiza o mesmo procedimento para as suas metades.
-            quickSort(reverse, first, elementOnLeft->previous->previous, separator - 1);
-            quickSort(reverse, elementOnLeft, pivot, steps - separator);
+            quickSort(reverse, first, elementOnRight->previous->previous, separator - 1);
+            quickSort(reverse, elementOnRight, pivot, steps - separator);
         }
 
         /**

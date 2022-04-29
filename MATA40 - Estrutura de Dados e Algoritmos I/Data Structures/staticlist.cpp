@@ -58,6 +58,54 @@ template <typename ElementType> class StaticList {
             beginsAt = beginsAt < 0 ? (length + beginsAt) : (beginsAt % length);
         }
 
+        /**
+        Método recursivo para ordenar a lista, utilizando o algoritmo QuickSort.
+        */
+        void quickSort(bool reverse, int first, int pivot) {
+
+            // Se não houver itens para ordenar, ele encerra a execução.
+            if (pivot - first <= 0) {
+                return;
+            }
+
+            int separator = 0;
+
+            ElementType elementOnRight = array[first + separator];
+            ElementType pivotValue = array[pivot];
+
+            // Organiza a lista em elementos menores e maiores que o pivô recebido.
+            for (int index = first; index < pivot + 1; index++) {
+                ElementType element = array[index];
+
+                // Se o elemento for menor que o pivô, ele será colocado à esquerda do separador.
+                if (compare(reverse, element, pivotValue)) {
+                    array[index] = elementOnRight;
+                    
+                    array[first + separator] = element;
+                    separator++;
+
+                    elementOnRight = array[first + separator];
+                }
+            }
+
+            // Divide a lista em duas partes e realiza o mesmo procedimento para as suas metades.
+            quickSort(reverse, first, first + separator - 2);
+            quickSort(reverse, first + separator, pivot); 
+        }
+
+        /**
+        Método utilizado pelo método de "sorting" para comparar os elementos.
+        */
+        bool compare(bool reverse, ElementType element1, ElementType element2) {
+            if (!reverse && (element1 <= element2)) {
+                return true;
+            }
+            if (reverse && (element1 >= element2)) {
+                return true;
+            }
+            return false;
+        }
+
     public:
         /**
         Construtor da classe.
@@ -190,6 +238,14 @@ template <typename ElementType> class StaticList {
         void set(int index, ElementType element) {
             validateIndex(index);
             array[getRelativeIndex(index)] = element;
+        }
+
+        /**
+        Método para ordenar a lista (algoritmo: QuickSort).
+        */
+        void sort(bool reverse = false) {
+            beginsAt = 0;
+            quickSort(reverse, 0, length - 1);
         }
 
         /**
