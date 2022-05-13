@@ -30,7 +30,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para criar um novo objeto de LinkedElement, retornando o seu ponteiro.
         */
-        struct LinkedElement<ElementType> *createLinkedElement(ElementType element) {
+        struct LinkedElement<ElementType> *createLinkedElement(const ElementType &element) {
             struct LinkedElement<ElementType> *newElement = new LinkedElement<ElementType>;
 
             newElement->content = element;
@@ -171,7 +171,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método utilizado pelo método de "sorting" para comparar os elementos.
         */
-        bool compare(bool reverse, ElementType element1, ElementType element2) {
+        bool compare(bool reverse, const ElementType &element1, const ElementType &element2) {
             if (!reverse && (element1 <= element2)) {
                 return true;
             }
@@ -230,7 +230,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para adicionar um elemento ao final da lista, utilizando a atribuição com soma.
         */
-        void operator +=(ElementType element) {
+        void operator +=(const ElementType &element) {
             return add(element);
         }
 
@@ -260,7 +260,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para adicionar um elemento ao final da lista.
         */
-        void add(ElementType element) {
+        void add(const ElementType &element) {
             insert(END, element);
         }
 
@@ -276,7 +276,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para verificar se a lista possui um determinado elemento.
         */
-        bool contains(ElementType element) {
+        bool contains(const ElementType &element) {
             struct LinkedElement<ElementType> *targetElement = lastElement;
 
             // Percorre os elementos da lista, verificando
@@ -294,7 +294,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para contar quantos elementos X existem na lista.
         */
-        int count(ElementType element) {
+        int count(const ElementType &element) {
             struct LinkedElement<ElementType> *targetElement = lastElement;
             int elementCount = 0;
 
@@ -313,7 +313,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para retornar o índice de um dado elemento.
         */
-        int indexOf(ElementType element) {
+        int indexOf(const ElementType &element) {
             struct LinkedElement<ElementType> *targetElement = lastElement;
 
             // Percorre os elementos da lista, verificando 
@@ -331,7 +331,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para inserir um elemento em uma posição existente da lista.
         */
-        void insert(int index, ElementType element) {
+        void insert(int index, const ElementType &element) {
 
             // Valida o índice recebido.
             if (index != BEGIN && index != END) {
@@ -399,7 +399,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para preencher a lista com um dado elemento.
         */
-        void fill(ElementType element) {
+        void fill(const ElementType &element) {
             struct LinkedElement<ElementType> *targetElement = lastElement;
 
             for (int index = 0; index < length; index++) {
@@ -423,7 +423,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para definir um elemento, em um dado índice.
         */
-        void set(int index, ElementType element) {
+        void set(int index, const ElementType &element) {
 
             // Valida o índice recebido.
             validateIndex(index, true);  
@@ -459,7 +459,7 @@ template <typename ElementType> class LinkedList {
         /**
         Método para remover um elemento, a partir de um índice.
         */
-        ElementType remove(int index) {
+        void remove(int index) {
 
             // Valida o índice recebido.
             validateIndex(index, true);
@@ -500,14 +500,11 @@ template <typename ElementType> class LinkedList {
                 targetElement->next->previous = targetElement->previous;
             }
 
-            // Salva o conteúdo e apaga o elemento da memória.
-            ElementType content = targetElement->content;
+            // Apaga o elemento da memória.
             delete targetElement;
 
             // Computa a remoção do elemento.
             length--;
-
-            return content;
         }
 
         /**
