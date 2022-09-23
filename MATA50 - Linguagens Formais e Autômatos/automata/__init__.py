@@ -1,24 +1,24 @@
 from .errors import *
+from .transitions import *
 
-class DeterministicFiniteAutomata(object):
+class DFAutomata(object):
 
-    def __init__(self, states, alphabet, transitions, initial_state, final_states):
-        self.__states = states
-        self.__alphabet = alphabet
-        
+    def __init__(self, transitions, initial_state, final_states):
+        if not isinstance(transitions, DFATransitions):
+            raise TypeError("Transitions must be a DFATransitions object")
+            
         self.__transition_function = transitions
-        
         self.__initial_state = initial_state
-        self.__final_states = final_states
+        self.__final_states = set(final_states)
 
-    def __validate(self, word, current_state):
-        if not word: return str() in self.__final_states
+    def run(self, word: str) -> bool:
+        if word is None or word == str():
+            return self.__initial_state in self.__final_states
+
+        state = self.__initial_state
         
-        try: new_state = self.__transition_function(current_state, word[0])
-        except IllegalTransitionOperationError: return False
-
-        if len(word) == 1: return new_state in self.__final_states
-        else: return self.__validate(word[1:], new_state)
-
-    def run(self, word) -> bool:
-        return self.__validate(word, self.__initial_state)
+        for char in word:
+            try: state = self.__transition_function(state, char)
+            except IllegalTransitionOperationError: return False
+            
+        return state in self.__final_states

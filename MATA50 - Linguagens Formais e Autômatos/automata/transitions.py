@@ -1,8 +1,6 @@
 from .errors import *
 
-__all__ = ("DeterministicFiniteAutomataTransitions", "NonDeterministicFiniteAutomataTransitions")
-
-class AutomataTransitions(object):
+class Transitions(object):
 
     def __init__(self):
         self.__transitions = dict()
@@ -31,13 +29,13 @@ class AutomataTransitions(object):
         except KeyError: pass
 
 
-class DeterministicFiniteAutomataTransitions(AutomataTransitions):
+class DFATransitions(Transitions):
     def set_transition(self, origin, operation, dest):
         if not isinstance(dest, str): raise TypeError("Dest must be a string, not {}".format(type(dest).__name__))
         super().set_transition(origin, operation, dest)
 
 
-class NonDeterministicFiniteAutomataTransitions(AutomataTransitions):
+class NDFATransitions(Transitions):
     def set_transition(self, origin, operation, *dest):
         for state in dest:
             if not isinstance(state, str):
