@@ -1,7 +1,9 @@
 from .errors import *
 
 class Transitions(object):
-
+    """
+    Transições de Autômatos.
+    """
     def __init__(self):
         self.__transitions = dict()
 
@@ -30,13 +32,29 @@ class Transitions(object):
 
 
 class DFATransitions(Transitions):
+    """
+    Transições de Autômatos Finitos Determinísticos.
+    """    
     def set_transition(self, origin, operation, dest):
         if not isinstance(dest, str): raise TypeError("Dest must be a string, not {}".format(type(dest).__name__))
         super().set_transition(origin, operation, dest)
 
 
 class NDFATransitions(Transitions):
+    """
+    Transições de Autômatos Finitos Não Determinísticos.
+    """
+    def add_transition(self, origin, operation, *dest):
+        super().add_transition(origin, operation, dest)
+        
     def set_transition(self, origin, operation, *dest):
+        
+        if len(dest) == 1 and type(dest[0]) is tuple:
+            dest = dest[0]
+
+        if len(dest) == 0:
+            raise TypeError("You must set at least one destination")
+            
         for state in dest:
             if not isinstance(state, str):
                 raise TypeError("Dest must be a string, not {}".format(type(state).__name__))
