@@ -13,6 +13,7 @@ repositório sempre que eu tiver um novo projeto, conforme meu progresso no curs
 
 
 ## :monocle_face: Disciplinas:
+- [MAT236 - Métodos Estatísticos](./MAT236%20-%20Métodos%20Estatísticos)
 - [MATA07 - Álgebra Linear A](./MATA07%20-%20Álgebra%20Linear%20A)
 - [MATA37 - Introdução à Lógica de Programação](./MATA37%20-%20Introdu%C3%A7%C3%A3o%20%C3%A0%20L%C3%B3gica%20de%20Programa%C3%A7%C3%A3o)
 - [MATA38 - Projetos de Circuitos Lógicos](./MATA38%20-%20Projetos%20de%20Circuitos%20L%C3%B3gicos)
