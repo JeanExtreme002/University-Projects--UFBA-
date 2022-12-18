@@ -14,7 +14,7 @@ em minúscula, os dois caracteres seguintes em maiúscula e assim por diante at�
 Imprima o resultado final;
 - Para cada caractere do conjunto de palavras, encontre a sua posição numérica no alfabeto português (exemplo: A -> 1, B -> 2, etc.). Imprima o resultado
 final com o número e o caractere;
-- Crie um vetor com os números obtidos do objetivo anterior e organize os seus elementos em ordem decrescente. Ao final, calcule a média.
+- Crie um vetor com os números obtidos do objetivo anterior e o organize em ordem decrescente. Ao final, calcule a média.
 
 
 
