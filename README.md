@@ -19,5 +19,6 @@ repositório sempre que eu tiver um novo projeto, conforme meu progresso no curs
 - [MATA38 - Projetos de Circuitos Lógicos](./MATA38%20-%20Projetos%20de%20Circuitos%20L%C3%B3gicos)
 - [MATA40 - Estrutura de Dados e Algoritmos I](./MATA40%20-%20Estrutura%20de%20Dados%20e%20Algoritmos%20I)
 - [MATA42 - Matemática Discreta I](./MATA42%20-%20Matem%C3%A1tica%20Discreta%20I)
+- [MATA49 - Programação de Software Básico](./MATA49%20-%20Programação%20de%20Software%20Básico)
 - [MATA50 - Linguagens Formais e Autômatos](./MATA50%20-%20Linguagens%20Formais%20e%20Autômatos)
 - [MATA57 - Laboratório de Programação I](./MATA57%20-%20Laboratório%20de%20Programação%20I)
