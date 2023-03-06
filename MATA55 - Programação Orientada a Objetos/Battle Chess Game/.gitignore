@@ -1,0 +1,6 @@
+!*/data/
+/data/
+.mypy_cache
+__pycache__/
+log.txt
+info.txt
