@@ -5,14 +5,27 @@ using namespace std;
 A fórmula para calcular os Números de Calatan é: (2N)! / [(N + 1)! * N!]. No entanto, 
 podemos reduzi-la, dividindo (2N)! por (N + 1)!, a fim de otimizar o código. Dessa forma,
 teríamos o produtório de (N + 2) até 2N, dividido pelo fatorial de N. Exemplo:
-
 f(7) = (2 * 7)! / [(7 + 1)! * 7!] = 14! / (8! * 7!) = (14 * 13 * 12 * 11 * 10 * 9) / 7!
-
 Sabendo disso, a função abaixo irá calcular um Número de Calatan, seguindo a ideia
 descrita acima, separando em dois arrays os numeradores e denominadores, e dividindo-os
 para que possa se chegar em um resultado sem precisar calcular números grandes, evitando
 que o valor seja maior que o valor máximo do tipo <T> em C++.
 */
+
+int getGreatestCommonDivisor(int a, int b) {
+    
+    // Obtém o máximo divisor comum.
+    int result = min(a, b);
+    
+    while (result > 0) {
+        if ((a % result == 0) && (b % result == 0)) {
+            break;
+        }
+        result--;
+    }
+    return result;
+}
+
 unsigned long long getCalatanNumber(int n) {
 
     // Obtém os números do numerador.
@@ -37,11 +50,9 @@ unsigned long long getCalatanNumber(int n) {
             int b = denominator[i];
 
             // Se A for divisível por B, o numerador será dividido pelo denominador.
-            if ((a % b) == 0) {
-                numerator[x] = a / b;
-                denominator[i] = 1;
-                break;
-            }
+            int divisor = getGreatestCommonDivisor(a, b);
+            numerator[x] = a / divisor;
+            denominator[i] = b / divisor;
         }
     }
 
@@ -67,6 +78,6 @@ int main() {
     cin >> n;
 
     for (int i = 0; i <= n; i++) {
-        cout << getCalatanNumber(i) << endl;
+        cout << i << " " << getCalatanNumber(i) << endl;
     }
 }
