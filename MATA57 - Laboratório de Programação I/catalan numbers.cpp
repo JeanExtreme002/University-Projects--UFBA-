@@ -9,8 +9,11 @@ f(7) = (2 * 7)! / [(7 + 1)! * 7!] = 14! / (8! * 7!) = (14 * 13 * 12 * 11 * 10 * 
 
 Sabendo disso, a função abaixo irá calcular um Número de Calatan, seguindo a ideia
 descrita acima, separando em dois arrays os numeradores e denominadores, e dividindo-os
-para que possa se chegar em um resultado sem precisar calcular números grandes, evitando
+para que se possa chegar em um resultado sem precisar calcular números grandes, evitando
 que o valor seja maior que o valor máximo do tipo <T> em C++.
+
+Complexidade de Tempo: O(n²)
+Complexidade de Espaço: O(n)
 */
 
 int getGreatestCommonDivisor(int a, int b) {
