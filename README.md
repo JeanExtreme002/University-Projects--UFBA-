@@ -24,3 +24,4 @@ repositório sempre que eu tiver um novo projeto, conforme meu progresso no curs
 - [MATA50 - Linguagens Formais e Autômatos](./MATA50%20-%20Linguagens%20Formais%20e%20Autômatos)
 - [MATA55 - Programação Orientada a Objetos](./MATA55%20-%20Programação%20Orientada%20a%20Objetos)
 - [MATA57 - Laboratório de Programação I](./MATA57%20-%20Laboratório%20de%20Programação%20I)
+- [MATA58 - Sistemas Operacionais](./MATA58%20-%20Sistemas%20Operacionais)
