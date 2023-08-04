@@ -48,7 +48,7 @@ Com o objetivo de proteger a integridade do jogo, o tráfego dos dados, tal como
 o jogo de cheats :)
 
 ## Configurações:
-O jogo atualmente conta com algumas opções do configurações, descritas abaixo:
+O jogo atualmente conta com algumas opções de configurações, descritas abaixo:
 - Resolução de Tela
 - Volume de Efeitos Sonoros
 - Volume de Músicas
@@ -58,7 +58,7 @@ O jogo atualmente conta com algumas opções do configurações, descritas abaix
 Quando o seu rei está em xeque, somente jogadas que o farão sair do xeque estarão liberadas.
 
 ## Riqueza no SFX:
-Demos atenção ao detalhe de cada peça e ação durante o jogo possuir seu próprio efeito sonoro.
+Demos atenção ao detalhe de cada peça e ação realizada durante o jogo possuir seu próprio efeito sonoro.
 
 ## Arquivo de Log:
 Caso algum erro ocorra durante o jogo, o mesmo será salvo no arquivo `log.txt`. Nessa situação, por gentileza, nos encaminhe o arquivo para que possamos solucionar o problema e melhorar o jogo.
